@@ -1,6 +1,8 @@
-# MP-MediaInfo
+# Arte.ITBIG.MediaInfo
 
-MP-MediaInfo is .NET wrapper for [MediaArea MediaInfo](https://github.com/MediaArea/MediaInfo) and use native packages [![NuGet Badge](https://buildstats.info/nuget/MediaInfo.Native)](https://www.nuget.org/packages/MediaInfo.Native) and [![NuGet Badge](https://buildstats.info/nuget/MediaInfo.Core.Native)](https://www.nuget.org/packages/MediaInfo.Core.Native).
+Arte.ITBIG.MediaInfo is a fork of [MP-MediaInfo](https://github.com/yartat/MP-MediaInfo).
+
+It is .NET wrapper for [MediaArea MediaInfo](https://github.com/MediaArea/MediaInfo) and use native packages [![NuGet Badge](https://img.shields.io/nuget/v/MediaInfo.Core.Native?label=MediaInfo.Core.Native)](https://www.nuget.org/packages/MediaInfo.Core.Native).
 
 [![Build status](https://ci.appveyor.com/api/projects/status/67ubhtmijuhyhq6q?svg=true)](https://ci.appveyor.com/project/yartat/mp-mediainfo)
 
@@ -8,33 +10,22 @@ MP-MediaInfo is .NET wrapper for [MediaArea MediaInfo](https://github.com/MediaA
 
 * Wraps the MediaInfo library
 * Provides properties for almost all information  available using the MediaInfo library
-* Targets .NET Framework, .NET Standard, .NET 5, .NET 6
+* Targets .NET 6
 
 ## Available packages
 
 | Framework | Package |
 |-----------|---------|
-| .NET Framework 4.0 | [![NuGet Badge](https://buildstats.info/nuget/MediaInfo.Wrapper)](https://www.nuget.org/packages/MediaInfo.Wrapper) |
-| .NET Framework 4.5 | [![NuGet Badge](https://buildstats.info/nuget/MediaInfo.Wrapper)](https://www.nuget.org/packages/MediaInfo.Wrapper) |
-| .NET Standard 2.0 | [![NuGet Badge](https://buildstats.info/nuget/MediaInfo.Wrapper.Core)](https://www.nuget.org/packages/MediaInfo.Wrapper.Core) |
-| .NET Standard 2.1 | [![NuGet Badge](https://buildstats.info/nuget/MediaInfo.Wrapper.Core)](https://www.nuget.org/packages/MediaInfo.Wrapper.Core) |
-| .NET 5.0 | [![NuGet Badge](https://buildstats.info/nuget/MediaInfo.Wrapper.Core)](https://www.nuget.org/packages/MediaInfo.Wrapper.Core) |
-| .NET 6.0 | [![NuGet Badge](https://buildstats.info/nuget/MediaInfo.Wrapper.Core)](https://www.nuget.org/packages/MediaInfo.Wrapper.Core) |
+| .NET 6.0 | [![NuGet Badge](https://img.shields.io/badge/package-Arte.ITBIG.MediaInfo-blue)](https://www.github.com/ArteGEIE/Arte.ITBIG.MediaInfo/pkg/nuget/Arte.ITBIG.MediaInfo) |
 
 ## Installation
 
-There are 2 packages for .NET Core and .NET Framework. If your project is designed to run only on Windows and you are not using .NET Core, use the .NET Framework package. .NET Core package is designed for ASP.NET Core services only.
+There are a package for .NET Core and it's designed for ASP.NET Core services only.
 
 ### .NET Core
 
 ```Shell{:copy}
-dotnet add package MediaInfo.Wrapper.Core --version 21.9.3
-```
-
-### .NET Framework
-
-```PowerShell{:copy}
-Install-Package MediaInfo.Wrapper -Version 21.9.3
+dotnet add package Arte.ITBIG.MediaInfo --version 21.9.4
 ```
 
 ## Usage
@@ -187,20 +178,6 @@ sudo pacman -S libcurl-gnutls libzen libmms libssh librtmp0
 ```
 
 ### Docker
-
-#### .NET Core 3.1
-
-```Dockerfile{:copy}
-FROM mcr.microsoft.com/dotnet/aspnet:3.1
-RUN apt-get update && apt-get install -y libzen0v5 libmms0 openssl zlib1g zlibc libnghttp2-14 librtmp1 curl libcurl4-gnutls-dev libglib2.0
-```
-
-#### .NET 5.0
-
-```Dockerfile{:copy}
-FROM mcr.microsoft.com/dotnet/aspnet:5.0
-RUN apt-get update && apt-get install -y libzen0v5 libmms0 openssl zlib1g zlibc libnghttp2-14 librtmp1 curl libcurl4-gnutls-dev libglib2.0
-```
 
 #### .NET 6.0
 

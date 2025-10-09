@@ -26,7 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MediaInfo.Wrapper\MediaInfo.Wrapper.Core.csproj" />
+    <ProjectReference Include="..\MediaInfo.Wrapper\Arte.ITBIG.MediaInfo.csproj" />
   </ItemGroup>
 
 </Project>
