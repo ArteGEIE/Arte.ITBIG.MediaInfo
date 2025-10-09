@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0;net5.0;netstandard2.1;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net6.0</TargetFrameworks>
     <RootNamespace>MediaInfo</RootNamespace>
-    <Version>$(MediaInfoVersion)</Version>
+    <Version>$(VersionPrefix)21.9.4</Version>
     <AssemblyVersion>$(MediaInfoFileVersion)</AssemblyVersion>
     <FileVersion>$(MediaInfoFileVersion)</FileVersion>
     <Company>$(PackageCompany)</Company>

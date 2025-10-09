@@ -6,27 +6,27 @@
 
 #endregion
 
+using MediaInfo.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using MediaInfo.Model;
 
 namespace MediaInfo.Builder
 {
-  /// <summary>
-  /// Describes base methods to build video stream.
-  /// </summary>
-  internal class VideoStreamBuilder : LanguageMediaStreamBuilder<VideoStream>
-  {
-    #region match dictionaries
+    /// <summary>
+    /// Describes base methods to build video stream.
+    /// </summary>
+    internal class VideoStreamBuilder : LanguageMediaStreamBuilder<VideoStream>
+    {
+        #region match dictionaries
 
-    private static readonly Dictionary<string, VideoStandard> VideoStandards = new Dictionary<string, VideoStandard>(StringComparer.OrdinalIgnoreCase)
+        private static readonly Dictionary<string, VideoStandard> VideoStandards = new Dictionary<string, VideoStandard>(StringComparer.OrdinalIgnoreCase)
     {
       { "NTSC", VideoStandard.NTSC },
       { "PAL", VideoStandard.PAL },
     };
 
-    private static readonly Dictionary<string, ChromaSubSampling> ChromaSubSamplings = new Dictionary<string, ChromaSubSampling>(StringComparer.OrdinalIgnoreCase)
+        private static readonly Dictionary<string, ChromaSubSampling> ChromaSubSamplings = new Dictionary<string, ChromaSubSampling>(StringComparer.OrdinalIgnoreCase)
     {
       { "3:3:2", ChromaSubSampling.Sampling332 },
       { "4:1:0", ChromaSubSampling.Sampling410 },
@@ -41,7 +41,7 @@ namespace MediaInfo.Builder
       { "8:8:8", ChromaSubSampling.Sampling888 },
     };
 
-    private static readonly Dictionary<string, ColorSpace> ColorSpaces = new Dictionary<string, ColorSpace>(StringComparer.OrdinalIgnoreCase)
+        private static readonly Dictionary<string, ColorSpace> ColorSpaces = new Dictionary<string, ColorSpace>(StringComparer.OrdinalIgnoreCase)
     {
       { "Display P3", ColorSpace.DisplayP3 },
       { "DCI P3", ColorSpace.DCIP3 },
@@ -62,20 +62,53 @@ namespace MediaInfo.Builder
       { "EBU Tech 3213", ColorSpace.EBUTech3213 }
     };
 
-    private static readonly Dictionary<string, TransferCharacteristic> TransferCharacteristics = new Dictionary<string, TransferCharacteristic>(StringComparer.OrdinalIgnoreCase)
+        private static readonly Dictionary<string, TransferCharacteristic> TransferCharacteristics = new Dictionary<string, TransferCharacteristic>(StringComparer.OrdinalIgnoreCase)
     {
       { "Printing density", TransferCharacteristic.PrintingDensity },
+      { "SMPTE 240M", TransferCharacteristic.SMPTE240M },
       { "SMPTE 274M", TransferCharacteristic.SMPTE274M },
+      { "SMPTE 428M", TransferCharacteristic.SMPTE428M },
       { "BT.709", TransferCharacteristic.BT709 },
+      { "BT.601", TransferCharacteristic.BT601 },
       { "BT.601 PAL", TransferCharacteristic.BT601PAL },
       { "BT.601 NTSC", TransferCharacteristic.BT601NTSC },
       { "Composite PAL", TransferCharacteristic.CompositePAL },
       { "Composite NTSC", TransferCharacteristic.CompositeNTSC },
       { "Z (depth) - homogeneous", TransferCharacteristic.ZHomogeneous },
-      { "Z (depth) - linear", TransferCharacteristic.ZLinear }
+      { "Z (depth) - linear", TransferCharacteristic.ZLinear },
+      { "PQ", TransferCharacteristic.PQ },
+      { "BT.470 System M", TransferCharacteristic.BT470SystemM },
+      { "BT.470 System B/G", TransferCharacteristic.BT470SystemBG },
+      { "Linear", TransferCharacteristic.Linear },
+      { "Logarithmic (100:1)", TransferCharacteristic.Logarithmic },
+      { "Logarithmic (316.22777:1)", TransferCharacteristic.Logarithmic316 },
+      { "xvYCC", TransferCharacteristic.XvYCC },
+      { "BT.1361", TransferCharacteristic.BT1361 },
+      { "sRGB/sYCC", TransferCharacteristic.SRGBSYCC },
+      { "BT.2020", TransferCharacteristic.BT2020 },
+      { "BT.2020 (10-bit)", TransferCharacteristic.BT2020_10bit },
+      { "BT.2020 (12-bit)", TransferCharacteristic.BT2020_12bit },
+      { "HLG", TransferCharacteristic.HLG },
     };
 
-    private static readonly Dictionary<string, AspectRatio> Ratios = new Dictionary<string, AspectRatio>
+        private static readonly Dictionary<string, MatrixCoefficient> MatrixCoefficients = new Dictionary<string, MatrixCoefficient>(StringComparer.OrdinalIgnoreCase)
+    {
+      { "Identity", MatrixCoefficient.Identity },
+      { "BT.470 System B/G", MatrixCoefficient.BT470SystemBG },
+      { "BT.601", MatrixCoefficient.BT601 },
+      { "BT.709", MatrixCoefficient.BT709 },
+      { "BT.2020 non-constant", MatrixCoefficient.BT2020NonConstant },
+      { "BT.2020 constant", MatrixCoefficient.BT2020Constant },
+      { "FCC 73.682", MatrixCoefficient.FCC73682 },
+      { "SMPTE 240M", MatrixCoefficient.SMPTE240M },
+      { "YCgCo", MatrixCoefficient.YCgCo },
+      { "Y'D'zD'x", MatrixCoefficient.YDzDx },
+      { "Chromaticity-derived non-constant", MatrixCoefficient.ChromaticityDerivedNonConstant },
+      { "Chromaticity-derived constant", MatrixCoefficient.ChromaticityDerivedConstant },
+      { "ICtCp", MatrixCoefficient.ICtCp },
+    };
+
+        private static readonly Dictionary<string, AspectRatio> Ratios = new Dictionary<string, AspectRatio>
     {
       { "1:1", AspectRatio.Opaque },
       { "5:4", AspectRatio.HighEndDataGraphics },
@@ -94,7 +127,7 @@ namespace MediaInfo.Builder
       { "2.334", AspectRatio.CinemaScope }
     };
 
-    private static readonly Dictionary<string, StereoMode> StereoModes = new Dictionary<string, StereoMode>(StringComparer.OrdinalIgnoreCase)
+        private static readonly Dictionary<string, StereoMode> StereoModes = new Dictionary<string, StereoMode>(StringComparer.OrdinalIgnoreCase)
     {
       { "side-by-side (left eye first)", StereoMode.SideBySideLeft },
       { "top-bottom (right eye first)", StereoMode.TopBottomRight },
@@ -112,7 +145,7 @@ namespace MediaInfo.Builder
       { "both eyes laced in one block (right eye first)", StereoMode.BothEyesLacedRight }
     };
 
-    private static readonly Dictionary<string, Hdr> HdrFormats = new Dictionary<string, Hdr>(StringComparer.OrdinalIgnoreCase)
+        private static readonly Dictionary<string, Hdr> HdrFormats = new Dictionary<string, Hdr>(StringComparer.OrdinalIgnoreCase)
     {
       { "Dolby Vision", Hdr.DolbyVision },
       { "HDR10", Hdr.HDR10 },
@@ -124,7 +157,7 @@ namespace MediaInfo.Builder
       { "HLG", Hdr.HLG },
     };
 
-    private static readonly Dictionary<string, VideoCodec> VideoCodecs = new Dictionary<string, VideoCodec>(StringComparer.OrdinalIgnoreCase)
+        private static readonly Dictionary<string, VideoCodec> VideoCodecs = new Dictionary<string, VideoCodec>(StringComparer.OrdinalIgnoreCase)
     {
       { "V_UNCOMPRESSED", VideoCodec.Uncompressed },
       { "V_DIRAC", VideoCodec.Dirac },
@@ -285,173 +318,177 @@ namespace MediaInfo.Builder
       { "Default (H.263)", VideoCodec.H263 },
     };
 
-    private static readonly Dictionary<string, FrameRateMode> FrameRateModes = new Dictionary<string, FrameRateMode>(StringComparer.OrdinalIgnoreCase)
+        private static readonly Dictionary<string, FrameRateMode> FrameRateModes = new Dictionary<string, FrameRateMode>(StringComparer.OrdinalIgnoreCase)
     {
       { "CFR", FrameRateMode.Constant },
       { "VFR", FrameRateMode.Variable }
     };
 
-    #endregion
+        #endregion
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="VideoStreamBuilder"/> class.
-    /// </summary>
-    /// <param name="info">The media info object.</param>
-    /// <param name="number">The stream number.</param>
-    /// <param name="position">The stream position.</param>
-    public VideoStreamBuilder(MediaInfo info, int number, int position)
-      : base(info, number, position)
-    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="VideoStreamBuilder"/> class.
+        /// </summary>
+        /// <param name="info">The media info object.</param>
+        /// <param name="number">The stream number.</param>
+        /// <param name="position">The stream position.</param>
+        public VideoStreamBuilder(MediaInfo info, int number, int position)
+          : base(info, number, position)
+        {
+        }
+
+        /// <inheritdoc />
+        public override MediaStreamKind Kind => MediaStreamKind.Video;
+
+        /// <inheritdoc />
+        protected override StreamKind StreamKind => StreamKind.Video;
+
+        public override VideoStream Build()
+        {
+            var result = base.Build();
+            result.FrameRate = Get<double>((int)NativeMethods.Video.Video_FrameRate, InfoKind.Text, TagBuilderHelper.TryGetDouble);
+            result.FrameRateMode = Get<FrameRateMode>((int)NativeMethods.Video.Video_FrameRate_Mode, InfoKind.Text, TryGetFrameRateMode);
+            result.Width = Get<int>((int)NativeMethods.Video.Video_Width, InfoKind.Text, TagBuilderHelper.TryGetInt);
+            result.Height = Get<int>((int)NativeMethods.Video.Video_Height, InfoKind.Text, TagBuilderHelper.TryGetInt);
+            result.Bitrate = Get<double>((int)NativeMethods.Video.Video_BitRate, InfoKind.Text, TagBuilderHelper.TryGetDouble);
+            if (Math.Abs(result.Bitrate) < 1E-7)
+            {
+                result.Bitrate = Get<double>((int)NativeMethods.Video.Video_BitRate_Maximum, InfoKind.Text, TagBuilderHelper.TryGetDouble);
+            }
+            result.AspectRatio = Get<AspectRatio>((int)NativeMethods.Video.Video_DisplayAspectRatio, InfoKind.Text, TryGetAspectRatio);
+            result.Interlaced = GetInterlaced(Get((int)NativeMethods.Video.Video_ScanType, InfoKind.Text));
+            var multiViewCount = Get<int>((int)NativeMethods.Video.Video_MultiView_Count, InfoKind.Text, TagBuilderHelper.TryGetInt);
+            result.Stereoscopic = multiViewCount >= 2
+                             ? Get<StereoMode>((int)NativeMethods.Video.Video_MultiView_Layout, InfoKind.Text, TryGetStereoscopic)
+                             : StereoMode.Mono;
+            if (result.Stereoscopic == StereoMode.Mono)
+            {
+                // Support Matroska stereo
+                if (multiViewCount >= 2)
+                {
+                    result.Stereoscopic = StereoMode.Stereo;
+                }
+                else
+                {
+                    // Support BD3D
+                    var idValues = Get((int)NativeMethods.Video.Video_ID, InfoKind.Text);
+                    if (idValues.Split('/').Count(x => !string.IsNullOrWhiteSpace(x)) > 1)
+                    {
+                        result.Stereoscopic = StereoMode.Stereo;
+                    }
+                }
+            }
+
+            result.Format = Get((int)NativeMethods.Video.Video_Format, InfoKind.Text);
+            result.Codec = Get<VideoCodec>((int)NativeMethods.Video.Video_Format, InfoKind.Text, TryGetCodecId);
+            if (result.Codec == VideoCodec.Undefined)
+            {
+                result.Codec = Get<VideoCodec>((int)NativeMethods.Video.Video_Codec, InfoKind.Text, TryGetCodec);
+                if (result.Codec == VideoCodec.Undefined)
+                {
+                    result.Codec = Get<VideoCodec>((int)NativeMethods.Video.Video_CodecID, InfoKind.Text, TryGetCodec);
+                }
+            }
+
+            switch (result.Codec)
+            {
+                case VideoCodec.Mpeg4:
+                    var additionalCodec = Get<VideoCodec>((int)NativeMethods.Video.Video_CodecID, InfoKind.Text, TryGetCodec);
+                    if (additionalCodec != VideoCodec.Undefined)
+                    {
+                        result.Codec = additionalCodec;
+                        break;
+                    }
+
+                    additionalCodec = Get<VideoCodec>((int)NativeMethods.Video.Video_Format_Settings_Matrix, InfoKind.Text, TryGetCodec);
+                    if (additionalCodec != VideoCodec.Undefined)
+                    {
+                        result.Codec = additionalCodec;
+                    }
+                    break;
+            }
+
+            result.CodecProfile = Get((int)NativeMethods.Video.Video_Format_Profile, InfoKind.Text);
+            result.Duration = TimeSpan.FromMilliseconds(Get<double>((int)NativeMethods.Video.Video_Duration, InfoKind.Text, TagBuilderHelper.TryGetDouble));
+            result.BitDepth = Get<int>((int)NativeMethods.Video.Video_BitDepth, InfoKind.Text, TagBuilderHelper.TryGetInt);
+            result.ColorSpace = Get<ColorSpace>((int)NativeMethods.Video.Video_colour_primaries, InfoKind.Text, TryGetColorSpace);
+            result.TransferCharacteristics = Get<TransferCharacteristic>((int)NativeMethods.Video.Video_transfer_characteristics, InfoKind.Text, TryGetTransferCharacteristics);
+            result.MatrixCoefficients = Get<MatrixCoefficient>((int)NativeMethods.Video.Video_matrix_coefficients, InfoKind.Text, TryGetMatrixCoefficients);
+            result.Standard = Get<VideoStandard>((int)NativeMethods.Video.Video_Standard, InfoKind.Text, TryGetStandard);
+            result.SubSampling = Get<ChromaSubSampling>((int)NativeMethods.Video.Video_ChromaSubsampling, InfoKind.Text, TryGetSubSampling);
+            result.CodecName = GetFullCodecName(result.CodecProfile);
+            result.Hdr = Get<Hdr>((int)NativeMethods.Video.Video_HDR_Format, InfoKind.Text, TryGetHdr);
+            if (result.Hdr == Hdr.None)
+            {
+                result.Hdr = Get<Hdr>((int)NativeMethods.Video.Video_transfer_characteristics, InfoKind.Text, TryGetHdr);
+            }
+
+            result.Tags = new VideoTagBuilder(Info, StreamPosition).Build();
+
+            return result;
+        }
+
+        private static bool TryGetCodecId(string codec, out VideoCodec result) =>
+          VideoCodecs.TryGetValue(codec, out result);
+
+        private static bool TryGetCodec(string codec, out VideoCodec result) =>
+          VideoCodecs.TryGetValue(codec, out result);
+
+        private static bool TryGetStereoscopic(string layout, out StereoMode result) =>
+          StereoModes.TryGetValue(layout, out result);
+
+        private static bool GetInterlaced(string source) =>
+          source?.ToLower().Contains("interlaced") ?? false;
+
+        private static bool TryGetAspectRatio(string source, out AspectRatio result) =>
+          Ratios.TryGetValue(source, out result);
+
+        private static bool TryGetColorSpace(string source, out ColorSpace result) =>
+          ColorSpaces.TryGetValue(source, out result);
+
+        private static bool TryGetTransferCharacteristics(string source, out TransferCharacteristic result) =>
+        TransferCharacteristics.TryGetValue(source, out result);
+
+        private static bool TryGetMatrixCoefficients(string source, out MatrixCoefficient result) =>
+        MatrixCoefficients.TryGetValue(source, out result);
+
+        private static bool TryGetStandard(string source, out VideoStandard result) =>
+          VideoStandards.TryGetValue(source, out result);
+
+        private static bool TryGetSubSampling(string source, out ChromaSubSampling result) =>
+          ChromaSubSamplings.TryGetValue(source, out result);
+
+        private static bool TryGetHdr(string source, out Hdr result) =>
+          HdrFormats.TryGetValue(source, out result);
+
+        private static bool TryGetFrameRateMode(string source, out FrameRateMode result) =>
+          FrameRateModes.TryGetValue(source, out result);
+
+        private string GetFullCodecName(string codecProfile)
+        {
+            var strFormat = Get((int)NativeMethods.Video.Video_Format_Commercial, InfoKind.Text);
+            var strCodec = Get((int)NativeMethods.Video.Video_CodecID, InfoKind.Text);
+
+            var strCodecVer = Get((int)NativeMethods.Video.Video_Format_Version, InfoKind.Text).ToUpper();
+            if (strCodec == "MPEG-4 VISUAL")
+            {
+                strCodec = Get((int)NativeMethods.Video.Video_CodecID, InfoKind.Text).ToUpperInvariant();
+            }
+            else
+            {
+                if (!string.IsNullOrEmpty(strCodecVer))
+                {
+                    strCodec = (strCodec + " " + strCodecVer).Trim();
+                    var strCodecProf = Get((int)NativeMethods.Video.Video_Format_Profile, InfoKind.Text).ToUpper();
+                    if (strCodecProf != "MAIN@MAIN")
+                    {
+                        strCodec = (strCodec + " " + strCodecProf).Trim();
+                    }
+                }
+            }
+
+            return strFormat + (string.IsNullOrEmpty(codecProfile) ? string.Empty : " " + codecProfile);
+            //return strCodec.Replace("+", "PLUS");
+        }
     }
-
-    /// <inheritdoc />
-    public override MediaStreamKind Kind => MediaStreamKind.Video;
-
-    /// <inheritdoc />
-    protected override StreamKind StreamKind => StreamKind.Video;
-
-    public override VideoStream Build()
-    {
-      var result = base.Build();
-      result.FrameRate = Get<double>((int)NativeMethods.Video.Video_FrameRate, InfoKind.Text, TagBuilderHelper.TryGetDouble);
-      result.FrameRateMode = Get<FrameRateMode>((int)NativeMethods.Video.Video_FrameRate_Mode, InfoKind.Text, TryGetFrameRateMode);
-      result.Width = Get<int>((int)NativeMethods.Video.Video_Width, InfoKind.Text, TagBuilderHelper.TryGetInt);
-      result.Height = Get<int>((int)NativeMethods.Video.Video_Height, InfoKind.Text, TagBuilderHelper.TryGetInt);
-      result.Bitrate = Get<double>((int)NativeMethods.Video.Video_BitRate, InfoKind.Text, TagBuilderHelper.TryGetDouble);
-      if (Math.Abs(result.Bitrate) < 1E-7)
-      {
-        result.Bitrate = Get<double>((int)NativeMethods.Video.Video_BitRate_Maximum, InfoKind.Text, TagBuilderHelper.TryGetDouble);
-      }
-      result.AspectRatio = Get<AspectRatio>((int)NativeMethods.Video.Video_DisplayAspectRatio, InfoKind.Text, TryGetAspectRatio);
-      result.Interlaced = GetInterlaced(Get((int)NativeMethods.Video.Video_ScanType, InfoKind.Text));
-      var multiViewCount = Get<int>((int)NativeMethods.Video.Video_MultiView_Count, InfoKind.Text, TagBuilderHelper.TryGetInt);
-      result.Stereoscopic = multiViewCount >= 2
-                       ? Get<StereoMode>((int)NativeMethods.Video.Video_MultiView_Layout, InfoKind.Text, TryGetStereoscopic)
-                       : StereoMode.Mono;
-      if (result.Stereoscopic == StereoMode.Mono)
-      {
-        // Support Matroska stereo
-        if (multiViewCount >= 2)
-        {
-          result.Stereoscopic = StereoMode.Stereo;
-        }
-        else
-        {
-          // Support BD3D
-          var idValues = Get((int)NativeMethods.Video.Video_ID, InfoKind.Text);
-          if (idValues.Split('/').Count(x => !string.IsNullOrWhiteSpace(x)) > 1)
-          {
-            result.Stereoscopic = StereoMode.Stereo;
-          }
-        }
-      }
-
-      result.Format = Get((int)NativeMethods.Video.Video_Format, InfoKind.Text);
-      result.Codec = Get<VideoCodec>((int)NativeMethods.Video.Video_Format, InfoKind.Text, TryGetCodecId);
-      if (result.Codec == VideoCodec.Undefined)
-      {
-        result.Codec = Get<VideoCodec>((int)NativeMethods.Video.Video_Codec, InfoKind.Text, TryGetCodec);
-        if (result.Codec == VideoCodec.Undefined)
-        {
-          result.Codec = Get<VideoCodec>((int)NativeMethods.Video.Video_CodecID, InfoKind.Text, TryGetCodec);
-        }
-      }
-
-      switch (result.Codec)
-      {
-        case VideoCodec.Mpeg4:
-          var additionalCodec = Get<VideoCodec>((int)NativeMethods.Video.Video_CodecID, InfoKind.Text, TryGetCodec);
-          if (additionalCodec != VideoCodec.Undefined)
-          {
-            result.Codec = additionalCodec;
-            break;
-          }
-
-          additionalCodec = Get<VideoCodec>((int)NativeMethods.Video.Video_Format_Settings_Matrix, InfoKind.Text, TryGetCodec);
-          if (additionalCodec != VideoCodec.Undefined)
-          {
-            result.Codec = additionalCodec;
-          }
-          break;
-      }
-
-      result.CodecProfile = Get((int)NativeMethods.Video.Video_Format_Profile, InfoKind.Text);
-      result.Duration = TimeSpan.FromMilliseconds(Get<double>((int)NativeMethods.Video.Video_Duration, InfoKind.Text, TagBuilderHelper.TryGetDouble));
-      result.BitDepth = Get<int>((int)NativeMethods.Video.Video_BitDepth, InfoKind.Text, TagBuilderHelper.TryGetInt);
-      result.ColorSpace = Get<ColorSpace>((int)NativeMethods.Video.Video_colour_primaries, InfoKind.Text, TryGetColorSpace);
-      result.TransferCharacteristics = Get<TransferCharacteristic>((int)NativeMethods.Video.Video_transfer_characteristics, InfoKind.Text, TryGetTransferCharacteristics);
-      result.Standard = Get<VideoStandard>((int)NativeMethods.Video.Video_Standard, InfoKind.Text, TryGetStandard);
-      result.SubSampling = Get<ChromaSubSampling>((int)NativeMethods.Video.Video_ChromaSubsampling, InfoKind.Text, TryGetSubSampling);
-      result.CodecName = GetFullCodecName(result.CodecProfile);
-      result.Hdr = Get<Hdr>((int)NativeMethods.Video.Video_HDR_Format, InfoKind.Text, TryGetHdr);
-      if (result.Hdr == Hdr.None)
-      {
-        result.Hdr = Get<Hdr>((int)NativeMethods.Video.Video_transfer_characteristics, InfoKind.Text, TryGetHdr);
-      }
-
-      result.Tags = new VideoTagBuilder(Info, StreamPosition).Build();
-
-      return result;
-    }
-
-    private static bool TryGetCodecId(string codec, out VideoCodec result) =>
-      VideoCodecs.TryGetValue(codec, out result);
-
-    private static bool TryGetCodec(string codec, out VideoCodec result) =>
-      VideoCodecs.TryGetValue(codec, out result);
-
-    private static bool TryGetStereoscopic(string layout, out StereoMode result) =>
-      StereoModes.TryGetValue(layout, out result);
-
-    private static bool GetInterlaced(string source) =>
-      source?.ToLower().Contains("interlaced") ?? false;
-
-    private static bool TryGetAspectRatio(string source, out AspectRatio result) =>
-      Ratios.TryGetValue(source, out result);
-
-    private static bool TryGetColorSpace(string source, out ColorSpace result) =>
-      ColorSpaces.TryGetValue(source, out result);
-
-    private static bool TryGetTransferCharacteristics(string source, out TransferCharacteristic result) =>
-    TransferCharacteristics.TryGetValue(source, out result);
-
-    private static bool TryGetStandard(string source, out VideoStandard result) =>
-      VideoStandards.TryGetValue(source, out result);
-
-    private static bool TryGetSubSampling(string source, out ChromaSubSampling result) =>
-      ChromaSubSamplings.TryGetValue(source, out result);
-
-    private static bool TryGetHdr(string source, out Hdr result) =>
-      HdrFormats.TryGetValue(source, out result);
-
-    private static bool TryGetFrameRateMode(string source, out FrameRateMode result) =>
-      FrameRateModes.TryGetValue(source, out result);
-
-    private string GetFullCodecName(string codecProfile)
-    {
-      var strFormat = Get((int)NativeMethods.Video.Video_Format_Commercial, InfoKind.Text);
-      var strCodec = Get((int)NativeMethods.Video.Video_CodecID, InfoKind.Text);
-
-      var strCodecVer = Get((int)NativeMethods.Video.Video_Format_Version, InfoKind.Text).ToUpper();
-      if (strCodec == "MPEG-4 VISUAL")
-      {
-        strCodec = Get((int)NativeMethods.Video.Video_CodecID, InfoKind.Text).ToUpperInvariant();
-      }
-      else
-      {
-        if (!string.IsNullOrEmpty(strCodecVer))
-        {
-          strCodec = (strCodec + " " + strCodecVer).Trim();
-          var strCodecProf = Get((int)NativeMethods.Video.Video_Format_Profile, InfoKind.Text).ToUpper();
-          if (strCodecProf != "MAIN@MAIN")
-          {
-            strCodec = (strCodec + " " + strCodecProf).Trim();
-          }
-        }
-      }
-
-      return strFormat + (string.IsNullOrEmpty(codecProfile) ? string.Empty : " " + codecProfile);
-      //return strCodec.Replace("+", "PLUS");
-    }
-  }
 }
