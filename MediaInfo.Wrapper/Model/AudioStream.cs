@@ -18,10 +18,10 @@ namespace MediaInfo.Model
     /// </summary>
     /// <seealso cref="LanguageMediaStream" />
     public class AudioStream : LanguageMediaStream
-  {
-    #region matching dictionaries
+    {
+        #region matching dictionaries
 
-    private static readonly Dictionary<AudioCodec, string> CodecFrendlyNames = new Dictionary<AudioCodec, string>
+        private static readonly Dictionary<AudioCodec, string> CodecFrendlyNames = new Dictionary<AudioCodec, string>
     {
       { AudioCodec.Undefined, "" },
       { AudioCodec.MpegLayer1, "MPEG Layer 1" },
@@ -80,7 +80,7 @@ namespace MediaInfo.Model
       { AudioCodec.Atrac9, "ATRAC9" },
     };
 
-    private static readonly Dictionary<int, string> Channels = new Dictionary<int, string>
+        private static readonly Dictionary<int, string> Channels = new Dictionary<int, string>
     {
       { 1, "Mono" },
       { 2, "Stereo" },
@@ -94,124 +94,124 @@ namespace MediaInfo.Model
       { 10, "7.2.1" },
     };
 
-    #endregion
+        #endregion
 
-    /// <inheritdoc />
-    public override MediaStreamKind Kind => MediaStreamKind.Audio;
+        /// <inheritdoc />
+        public override MediaStreamKind Kind => MediaStreamKind.Audio;
 
-    /// <inheritdoc />
-    protected override StreamKind StreamKind => StreamKind.Audio;
+        /// <inheritdoc />
+        protected override StreamKind StreamKind => StreamKind.Audio;
 
-    /// <summary>
-    /// Gets the audio codec.
-    /// </summary>
-    /// <value>
-    /// The audio codec.
-    /// </value>
-    public AudioCodec Codec { get; set; }
+        /// <summary>
+        /// Gets the audio codec.
+        /// </summary>
+        /// <value>
+        /// The audio codec.
+        /// </value>
+        public AudioCodec Codec { get; set; }
 
-    /// <summary>
-    /// Gets the codec friendly name.
-    /// </summary>
-    /// <value>
-    /// The codec friendly name.
-    /// </value>
-    public string CodecFriendly
-    {
-      get => CodecFrendlyNames.TryGetValue(Codec, out var result) ? result : string.Empty;
+        /// <summary>
+        /// Gets the codec friendly name.
+        /// </summary>
+        /// <value>
+        /// The codec friendly name.
+        /// </value>
+        public string CodecFriendly
+        {
+            get => CodecFrendlyNames.TryGetValue(Codec, out var result) ? result : string.Empty;
+        }
+
+        /// <summary>
+        /// Gets the stream duration.
+        /// </summary>
+        /// <value>
+        /// The stream duration.
+        /// </value>
+        public TimeSpan Duration { get; set; }
+
+        /// <summary>
+        /// Gets the audio bitrate.
+        /// </summary>
+        /// <value>
+        /// The audio bitrate.
+        /// </value>
+        public double Bitrate { get; set; }
+
+        /// <summary>
+        /// Gets the audio channel amount.
+        /// </summary>
+        /// <value>
+        /// The audio channel amount.
+        /// </value>
+        public int Channel { get; set; }
+
+        /// <summary>
+        /// Gets the audio sampling rate.
+        /// </summary>
+        /// <value>
+        /// The audio sampling rate.
+        /// </value>
+        public double SamplingRate { get; set; }
+
+        /// <summary>
+        /// Gets the bit depth of stream.
+        /// </summary>
+        /// <value>
+        /// The bit depth of stream.
+        /// </value>
+        public int BitDepth { get; set; }
+
+        /// <summary>
+        /// Gets the bitrate mode of stream.
+        /// </summary>
+        /// <value>
+        /// The bitrate mode of stream.
+        /// </value>
+        [DataMember(Name = "bitrateMode")]
+        public BitrateMode BitrateMode { get; set; }
+
+        /// <summary>
+        /// Gets the audio format.
+        /// </summary>
+        /// <value>
+        /// The audio format.
+        /// </value>
+        public string Format { get; set; }
+
+        /// <summary>
+        /// Gets the audio codec name.
+        /// </summary>
+        /// <value>
+        /// The audio codec name.
+        /// </value>
+        public string CodecName { get; set; }
+
+        /// <summary>
+        /// Gets the audio codec description.
+        /// </summary>
+        /// <value>
+        /// The audio codec description.
+        /// </value>
+        public string CodecDescription { get; set; }
+
+        /// <summary>
+        /// Gets the audio channels friendly.
+        /// </summary>
+        /// <value>
+        /// The audio channels friendly.
+        /// </value>
+        public string AudioChannelsFriendly => ConvertAudioChannels(Channel);
+
+        /// <summary>
+        /// Gets the stream tags.
+        /// </summary>
+        /// <value>
+        /// The stream tags.
+        /// </value>
+        [DataMember(Name = "tags")]
+        public AudioTags Tags { get; internal set; } = new AudioTags();
+
+        private static string ConvertAudioChannels(int channels) =>
+          Channels.TryGetValue(channels, out var result) ? result : "Unknown";
     }
-
-    /// <summary>
-    /// Gets the stream duration.
-    /// </summary>
-    /// <value>
-    /// The stream duration.
-    /// </value>
-    public TimeSpan Duration { get; set; }
-
-    /// <summary>
-    /// Gets the audio bitrate.
-    /// </summary>
-    /// <value>
-    /// The audio bitrate.
-    /// </value>
-    public double Bitrate { get; set; }
-
-    /// <summary>
-    /// Gets the audio channel amount.
-    /// </summary>
-    /// <value>
-    /// The audio channel amount.
-    /// </value>
-    public int Channel { get; set; }
-
-    /// <summary>
-    /// Gets the audio sampling rate.
-    /// </summary>
-    /// <value>
-    /// The audio sampling rate.
-    /// </value>
-    public double SamplingRate { get; set; }
-
-    /// <summary>
-    /// Gets the bit depth of stream.
-    /// </summary>
-    /// <value>
-    /// The bit depth of stream.
-    /// </value>
-    public int BitDepth { get; set; }
-
-    /// <summary>
-    /// Gets the bitrate mode of stream.
-    /// </summary>
-    /// <value>
-    /// The bitrate mode of stream.
-    /// </value>
-    [DataMember(Name = "bitrateMode")]
-    public BitrateMode BitrateMode { get; set; }
-
-    /// <summary>
-    /// Gets the audio format.
-    /// </summary>
-    /// <value>
-    /// The audio format.
-    /// </value>
-    public string Format { get; set; }
-
-    /// <summary>
-    /// Gets the audio codec name.
-    /// </summary>
-    /// <value>
-    /// The audio codec name.
-    /// </value>
-    public string CodecName { get; set; }
-
-    /// <summary>
-    /// Gets the audio codec description.
-    /// </summary>
-    /// <value>
-    /// The audio codec description.
-    /// </value>
-    public string CodecDescription { get; set; }
-
-    /// <summary>
-    /// Gets the audio channels friendly.
-    /// </summary>
-    /// <value>
-    /// The audio channels friendly.
-    /// </value>
-    public string AudioChannelsFriendly => ConvertAudioChannels(Channel);
-
-    /// <summary>
-    /// Gets the stream tags.
-    /// </summary>
-    /// <value>
-    /// The stream tags.
-    /// </value>
-    [DataMember(Name = "tags")]
-    public AudioTags Tags { get; internal set; } = new AudioTags();
-
-    private static string ConvertAudioChannels(int channels) =>
-      Channels.TryGetValue(channels, out var result) ? result : "Unknown";
-  }
 }

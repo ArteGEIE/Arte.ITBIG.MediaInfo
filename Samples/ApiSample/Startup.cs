@@ -6,8 +6,6 @@
 
 #endregion
 
-using System;
-using System.Text.Json.Serialization;
 using ApiSample.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -15,6 +13,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
+using System;
+using System.Text.Json.Serialization;
 
 namespace ApiSample;
 

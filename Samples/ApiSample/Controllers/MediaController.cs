@@ -6,10 +6,6 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Net.Mime;
 using ApiSample.Infrastructure.Filters;
 using ApiSample.Models;
 using AutoMapper;
@@ -17,6 +13,10 @@ using MediaInfo;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Net.Mime;
 
 namespace ApiSample.Controllers;
 

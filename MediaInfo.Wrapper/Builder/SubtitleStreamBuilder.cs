@@ -6,19 +6,19 @@
 
 #endregion
 
-using System.Collections.Generic;
 using MediaInfo.Model;
+using System.Collections.Generic;
 
 namespace MediaInfo.Builder
 {
-  /// <summary>
-  /// Describes base methods to build subtitle stream.
-  /// </summary>
-  internal class SubtitleStreamBuilder : LanguageMediaStreamBuilder<SubtitleStream>
-  {
-    #region match dictionary
+    /// <summary>
+    /// Describes base methods to build subtitle stream.
+    /// </summary>
+    internal class SubtitleStreamBuilder : LanguageMediaStreamBuilder<SubtitleStream>
+    {
+        #region match dictionary
 
-    private static readonly Dictionary<string, SubtitleCodec> SubtitleCodecs = new Dictionary<string, SubtitleCodec>
+        private static readonly Dictionary<string, SubtitleCodec> SubtitleCodecs = new Dictionary<string, SubtitleCodec>
     {
         { "S_ASS", SubtitleCodec.Ass },
         { "S_IMAGE/BMP", SubtitleCodec.ImageBmp },
@@ -34,37 +34,37 @@ namespace MediaInfo.Builder
         { "S_HDMV/TEXTST", SubtitleCodec.HdmvTextst }
     };
 
-    #endregion
+        #endregion
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="SubtitleStreamBuilder"/> class.
-    /// </summary>
-    /// <param name="info">The media info object.</param>
-    /// <param name="number">The stream number.</param>
-    /// <param name="position">The stream position.</param>
-    public SubtitleStreamBuilder(MediaInfo info, int number, int position)
-      : base(info, number, position)
-    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SubtitleStreamBuilder"/> class.
+        /// </summary>
+        /// <param name="info">The media info object.</param>
+        /// <param name="number">The stream number.</param>
+        /// <param name="position">The stream position.</param>
+        public SubtitleStreamBuilder(MediaInfo info, int number, int position)
+          : base(info, number, position)
+        {
+        }
+
+        /// <inheritdoc />
+        public override MediaStreamKind Kind => MediaStreamKind.Text;
+
+        /// <inheritdoc />
+        protected override StreamKind StreamKind => StreamKind.Text;
+
+        /// <inheritdoc />
+        public override SubtitleStream Build()
+        {
+            var result = base.Build();
+            result.Format = Get((int)NativeMethods.Text.Text_Format, InfoKind.Text);
+            result.Codec = Get<SubtitleCodec>((int)NativeMethods.Text.Text_CodecID, InfoKind.Text, TryGetCodec);
+            return result;
+        }
+
+        private static bool TryGetCodec(string source, out SubtitleCodec result)
+        {
+            return SubtitleCodecs.TryGetValue(source.ToUpper(), out result);
+        }
     }
-
-    /// <inheritdoc />
-    public override MediaStreamKind Kind => MediaStreamKind.Text;
-
-    /// <inheritdoc />
-    protected override StreamKind StreamKind => StreamKind.Text;
-
-    /// <inheritdoc />
-    public override SubtitleStream Build()
-    {
-      var result = base.Build();
-      result.Format = Get((int)NativeMethods.Text.Text_Format, InfoKind.Text);
-      result.Codec = Get<SubtitleCodec>((int)NativeMethods.Text.Text_CodecID, InfoKind.Text, TryGetCodec);
-      return result;
-    }
-
-    private static bool TryGetCodec(string source, out SubtitleCodec result)
-    {
-      return SubtitleCodecs.TryGetValue(source.ToUpper(), out result);
-    }
-  }
 }

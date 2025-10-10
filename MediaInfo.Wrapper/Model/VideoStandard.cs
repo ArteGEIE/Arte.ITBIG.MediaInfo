@@ -8,19 +8,19 @@
 
 namespace MediaInfo.Model
 {
-  /// <summary>
-  /// Describes video standards
-  /// </summary>
-  public enum VideoStandard
-  {
     /// <summary>
-    /// NTSC standard
+    /// Describes video standards
     /// </summary>
-    NTSC,
+    public enum VideoStandard
+    {
+        /// <summary>
+        /// NTSC standard
+        /// </summary>
+        NTSC,
 
-    /// <summary>
-    /// PAL standard
-    /// </summary>
-    PAL
-  }
+        /// <summary>
+        /// PAL standard
+        /// </summary>
+        PAL
+    }
 }
