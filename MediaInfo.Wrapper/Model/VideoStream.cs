@@ -186,6 +186,14 @@ namespace MediaInfo.Model
         public string CodecName { get; set; }
 
         /// <summary>
+        /// Gets or sets the codec id of video
+        /// </summary>
+        /// <value>
+        /// Video codec id.
+        /// </value>
+        public string CodecId { get; set; }
+
+        /// <summary>
         /// Gets the video resolution.
         /// </summary>
         /// <value>
