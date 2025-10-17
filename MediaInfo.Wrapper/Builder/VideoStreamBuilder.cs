@@ -426,6 +426,8 @@ namespace MediaInfo.Builder
 
             result.Tags = new VideoTagBuilder(Info, StreamPosition).Build();
 
+            result.BitrateMode = Get<BitrateMode>((int)NativeMethods.Video.Video_BitRate_Mode, InfoKind.Text, TagBuilderHelper.TryGetBitrateMode);
+
             return result;
         }
 
