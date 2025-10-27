@@ -577,8 +577,8 @@ namespace MediaInfo
 
             Format = mediaInfo.Get(StreamKind.General, 0, "Format");
             IsStreamable = mediaInfo.Get(StreamKind.General, 0, (int)NativeMethods.General.General_IsStreamable).TryGetBool(out var streamable) && streamable;
-            WritingApplication = mediaInfo.Get(StreamKind.General, 0, (int)NativeMethods.General.General_Encoded_Application);
-            WritingLibrary = mediaInfo.Get(StreamKind.General, 0, (int)NativeMethods.General.General_Encoded_Library);
+            WritingApplication = mediaInfo.Get(StreamKind.General, 0, "Encoded_Application_String");
+            WritingLibrary = mediaInfo.Get(StreamKind.General, 0, "Encoded_Library_String");
             Attachments = mediaInfo.Get(StreamKind.General, 0, "Attachments");
             Profile = mediaInfo.Get(StreamKind.General, 0, "Format_Profile");
             FormatVersion = mediaInfo.Get(StreamKind.General, 0, "Format_Version");
