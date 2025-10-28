@@ -17,6 +17,8 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace MediaInfo
 {
@@ -879,6 +881,7 @@ namespace MediaInfo
         /// <value>
         /// The best video stream.
         /// </value>
+        [JsonIgnore]
         public VideoStream BestVideoStream { get; private set; }
 
         /// <summary>
@@ -971,6 +974,7 @@ namespace MediaInfo
         /// <value>
         /// The best audio stream.
         /// </value>
+        [JsonIgnore]
         public AudioStream BestAudioStream { get; private set; }
 
         /// <summary>
@@ -1203,6 +1207,29 @@ namespace MediaInfo
         /// The media information text.
         /// </value>
         public string Text { get; private set; }
+
+        /// <summary>
+        /// Serializes the MediaInfoWrapper object to a JSON string using System.Text.Json
+        /// </summary>
+        public string ToJson(bool ignoreNullValues = true, bool ignoreEmptyCollections = true, bool writeIndented = false)
+        {
+            try
+            {
+                var options = new JsonSerializerOptions
+                {
+                    WriteIndented = writeIndented,
+                    DefaultIgnoreCondition = ignoreNullValues ? JsonIgnoreCondition.WhenWritingNull : JsonIgnoreCondition.Never,
+                    ReferenceHandler = ReferenceHandler.IgnoreCycles,
+                };
+
+                return JsonSerializer.Serialize(this, options);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error during serialization MediaInfoWrapper to JSON. Error:{Message}", ex.Message);
+                return string.Empty;
+            }
+        }
     }
 
 #if NET40 || NET45

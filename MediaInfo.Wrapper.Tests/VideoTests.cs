@@ -456,5 +456,17 @@ namespace MediaInfo.Wrapper.Tests
             video.SubSampling.Should().Be(chromaSubSampling);
             video.StreamSize.Should().Be(streamSize);
         }
+
+        [Theory]
+        [InlineData(@".\Data\034755-725-A_UHD25_Op1b.mxf")]
+        public void Rayan_Test(string fileName)
+        {
+            _mediaInfoWrapper = new MediaInfoWrapper(fileName, _logger);
+
+            string x = _mediaInfoWrapper.ToJson(true, true, false);
+
+            _mediaInfoWrapper.Success.Should().BeTrue("InfoWrapper should be loaded");
+            x.Should().NotBeNullOrEmpty();
+        }
     }
 }
