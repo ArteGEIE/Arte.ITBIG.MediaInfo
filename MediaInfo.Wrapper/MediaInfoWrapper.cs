@@ -17,6 +17,8 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace MediaInfo
 {
@@ -145,7 +147,7 @@ namespace MediaInfo
                 ParseMedia(inputStream);
 #endif
                 logger.LogDebug(
-                  "Process {file} was completed successfully. Video={video}, Audio={audio}, Subtitle={subtitle}",
+                  "Process {File} was completed successfully. Video={Video}, Audio={Audio}, Subtitle={Subtitle}",
                   inputStream,
                   VideoStreams.Count,
                   AudioStreams.Count,
@@ -179,7 +181,7 @@ namespace MediaInfo
            : this(0L, logger)
         {
             _filePath = filePath;
-            logger.LogDebug("Analyzing media {path}.", filePath);
+            logger.LogDebug("Analyzing media {Path}.", filePath);
             if (string.IsNullOrEmpty(filePath))
             {
                 logger.LogError("Media file name to processing is null or empty");
@@ -220,7 +222,7 @@ namespace MediaInfo
                 }
                 else
                 {
-                    logger.LogWarning("Media file is {media}", GetMediaFileType(isTv, isRadio, isRtsp));
+                    logger.LogWarning("Media file is {Media}", GetMediaFileType(isTv, isRadio, isRtsp));
                     return;
                 }
             }
@@ -264,7 +266,7 @@ namespace MediaInfo
                 ParseMedia(filePath);
 #endif
                 logger.LogDebug(
-                    "Process {file} was completed successfully. Video={videos}, Audio={audios}, Subtitle={subtitles}",
+                    "Process {File} was completed successfully. Video={Videos}, Audio={Audios}, Subtitle={Subtitles}",
                     filePath,
                     VideoStreams.Count,
                     AudioStreams.Count,
@@ -290,65 +292,65 @@ namespace MediaInfo
         /// </summary>
         public void WriteInfo()
         {
-            _logger.LogInformation("Inspecting media    : {path}", _filePath);
+            _logger.LogInformation("Inspecting media    : {Path}", _filePath);
             if (!Success)
             {
                 _logger.LogWarning("MediaInfo library was not loaded!");
             }
             else
             {
-                _logger.LogDebug("Library version      : {version}", Version);
+                _logger.LogDebug("Library version      : {Version}", Version);
 
                 // General
-                _logger.LogDebug("Media duration      : {duration}", TimeSpan.FromMilliseconds(Duration));
-                _logger.LogDebug("Has audio           : {audio}", (AudioStreams?.Count ?? 0) > 0);
-                _logger.LogDebug("Has video           : {video}", HasVideo);
-                _logger.LogDebug("Has subtitles       : {subtitles}", HasSubtitles);
-                _logger.LogDebug("Has chapters        : {chapters}", HasChapters);
-                _logger.LogDebug("Is DVD              : {dvd}", IsDvd);
-                _logger.LogDebug("Is Blu-Ray disk     : {bluRay}", IsBluRay);
+                _logger.LogDebug("Media duration      : {Duration}", TimeSpan.FromMilliseconds(Duration));
+                _logger.LogDebug("Has audio           : {Audio}", (AudioStreams?.Count ?? 0) > 0);
+                _logger.LogDebug("Has video           : {Video}", HasVideo);
+                _logger.LogDebug("Has subtitles       : {Subtitles}", HasSubtitles);
+                _logger.LogDebug("Has chapters        : {Chapters}", HasChapters);
+                _logger.LogDebug("Is DVD              : {Dvd}", IsDvd);
+                _logger.LogDebug("Is Blu-Ray disk     : {BluRay}", IsBluRay);
 
                 // Video
                 if (HasVideo)
                 {
-                    _logger.LogDebug("Video duration      : {duration}", BestVideoStream?.Duration ?? TimeSpan.MinValue);
-                    _logger.LogDebug("Video frame rate    : {rate}", Framerate);
-                    _logger.LogDebug("Video width         : {width}", Width);
-                    _logger.LogDebug("Video height        : {height}", Height);
-                    _logger.LogDebug("Video aspect ratio  : {ratio}", AspectRatio);
-                    _logger.LogDebug("Video codec         : {codec}", VideoCodec);
-                    _logger.LogDebug("Video scan type     : {scanType}", ScanType);
-                    _logger.LogDebug("Is video interlaced : {interlaced}", IsInterlaced);
-                    _logger.LogDebug("Video resolution    : {resolution}", VideoResolution);
-                    _logger.LogDebug("Video 3D mode       : {mode}", BestVideoStream?.Stereoscopic ?? StereoMode.Mono);
-                    _logger.LogDebug("Video HDR standard  : {hdr}", BestVideoStream?.Hdr ?? Hdr.None);
+                    _logger.LogDebug("Video duration      : {Duration}", BestVideoStream?.Duration ?? TimeSpan.MinValue);
+                    _logger.LogDebug("Video frame rate    : {Rate}", Framerate);
+                    _logger.LogDebug("Video width         : {Width}", Width);
+                    _logger.LogDebug("Video height        : {Height}", Height);
+                    _logger.LogDebug("Video aspect ratio  : {Ratio}", AspectRatio);
+                    _logger.LogDebug("Video codec         : {Codec}", VideoCodec);
+                    _logger.LogDebug("Video scan type     : {ScanType}", ScanType);
+                    _logger.LogDebug("Is video interlaced : {Interlaced}", IsInterlaced);
+                    _logger.LogDebug("Video resolution    : {Resolution}", VideoResolution);
+                    _logger.LogDebug("Video 3D mode       : {Mode}", BestVideoStream?.Stereoscopic ?? StereoMode.Mono);
+                    _logger.LogDebug("Video HDR standard  : {Hdr}", BestVideoStream?.Hdr ?? Hdr.None);
                 }
 
                 // Audio
                 if ((AudioStreams?.Count ?? 0) > 0)
                 {
-                    _logger.LogDebug("Audio duration      : {duration}", BestAudioStream?.Duration ?? TimeSpan.MinValue);
-                    _logger.LogDebug("Audio rate          : {rate}", AudioRate);
-                    _logger.LogDebug("Audio channels      : {channels}", AudioChannelsFriendly);
-                    _logger.LogDebug("Audio codec         : {codec}", AudioCodec);
-                    _logger.LogDebug("Audio bit depth     : {bits}", BestAudioStream?.BitDepth ?? 0);
+                    _logger.LogDebug("Audio duration      : {Duration}", BestAudioStream?.Duration ?? TimeSpan.MinValue);
+                    _logger.LogDebug("Audio rate          : {Rate}", AudioRate);
+                    _logger.LogDebug("Audio channels      : {Channels}", AudioChannelsFriendly);
+                    _logger.LogDebug("Audio codec         : {Codec}", AudioCodec);
+                    _logger.LogDebug("Audio bit depth     : {Bits}", BestAudioStream?.BitDepth ?? 0);
                 }
 
                 // Subtitles
                 if (HasSubtitles)
                 {
-                    _logger.LogDebug("Subtitles count     : {count}", Subtitles?.Count ?? 0);
+                    _logger.LogDebug("Subtitles count     : {Count}", Subtitles?.Count ?? 0);
                 }
 
                 // Chapters
                 if (HasChapters)
                 {
-                    _logger.LogDebug("Chapters count      : {count}", Chapters?.Count ?? 0);
+                    _logger.LogDebug("Chapters count      : {Count}", Chapters?.Count ?? 0);
                 }
             }
         }
 
-        private void ParseStreamWithoutSeek(Stream stream, MediaInfo mediaInfo)
+        private static void ParseStreamWithoutSeek(Stream stream, MediaInfo mediaInfo)
         {
             mediaInfo.Option("File_IsSeekable", "0");
             mediaInfo.OpenBufferInit(stream.Length, 0L);
@@ -371,7 +373,7 @@ namespace MediaInfo
             while (processed && stream.CanRead && readed > 0);
         }
 
-        private void ParseStreamWithSeek(Stream stream, MediaInfo mediaInfo)
+        private static void ParseStreamWithSeek(Stream stream, MediaInfo mediaInfo)
         {
             mediaInfo.OpenBufferInit(stream.Length, 0L);
             int readed;
@@ -446,7 +448,7 @@ namespace MediaInfo
             Size = GetDirectorySize(path);
             var bups = Directory.GetFiles(path, "*.BUP", SearchOption.TopDirectoryOnly);
             var programBlocks = new List<(string FileName, int Duration)>();
-            _logger.LogDebug("DVD directory size {size}", Size);
+            _logger.LogDebug("DVD directory size {Size}", Size);
             foreach (var bupFile in bups)
             {
 #if NET40 || NET45
@@ -482,7 +484,7 @@ namespace MediaInfo
 #else
             using var mi = new MediaInfo();
 #endif
-            _logger.LogDebug("Opening {file}", file);
+            _logger.LogDebug("Opening {File}", file);
             Version = mi.Option("Info_Version");
             mi.Open(file);
             var profile = mi.Get(StreamKind.General, 0, "Format_Profile");
@@ -493,7 +495,7 @@ namespace MediaInfo
                   NumberStyles.AllowDecimalPoint,
                   _providerNumber,
                   out var duration);
-                _logger.LogDebug("Profile is program with {duration} sec", duration);
+                _logger.LogDebug("Profile is program with {Duration} sec", duration);
                 return (file, (int)duration);
             }
 
@@ -518,7 +520,7 @@ namespace MediaInfo
             }
 
             Version = mediaInfo.Option("Info_Version");
-            _logger.LogDebug("MediaInfo library was loaded. ({handle} Version={version}", mediaInfo.Handle, Version);
+            _logger.LogDebug("MediaInfo library was loaded. ({Handle} Version={Version}", mediaInfo.Handle, Version);
             if (!stream.CanSeek)
             {
                 ParseStreamWithoutSeek(stream, mediaInfo);
@@ -551,18 +553,18 @@ namespace MediaInfo
             else
             {
                 Version = mediaInfo.Option("Info_Version");
-                _logger.LogDebug("MediaInfo library was loaded. (handle={handle}, version={version})", mediaInfo.Handle, Version);
+                _logger.LogDebug("MediaInfo library was loaded. (handle={Handle}, version={Version})", mediaInfo.Handle, Version);
             }
 
             var filePricessingHandle = mediaInfo.Open(filePath);
             if (filePricessingHandle == IntPtr.Zero)
             {
-                _logger.LogWarning("MediaInfo library has not been opened media {path}", filePath);
+                _logger.LogWarning("MediaInfo library has not been opened media {Path}", filePath);
                 return;
             }
             else
             {
-                _logger.LogDebug("MediaInfo library successfully opened {path}. (handle={handle})", filePath, filePricessingHandle);
+                _logger.LogDebug("MediaInfo library successfully opened {Path}. (handle={Handle})", filePath, filePricessingHandle);
             }
 
             ParseMedia(mediaInfo);
@@ -577,13 +579,13 @@ namespace MediaInfo
 
             Format = mediaInfo.Get(StreamKind.General, 0, "Format");
             IsStreamable = mediaInfo.Get(StreamKind.General, 0, (int)NativeMethods.General.General_IsStreamable).TryGetBool(out var streamable) && streamable;
-            WritingApplication = mediaInfo.Get(StreamKind.General, 0, (int)NativeMethods.General.General_Encoded_Application);
-            WritingLibrary = mediaInfo.Get(StreamKind.General, 0, (int)NativeMethods.General.General_Encoded_Library);
+            WritingApplication = mediaInfo.Get(StreamKind.General, 0, "Encoded_Application_String");
+            WritingLibrary = mediaInfo.Get(StreamKind.General, 0, "Encoded_Library_String");
             Attachments = mediaInfo.Get(StreamKind.General, 0, "Attachments");
             Profile = mediaInfo.Get(StreamKind.General, 0, "Format_Profile");
             FormatVersion = mediaInfo.Get(StreamKind.General, 0, "Format_Version");
             Codec = mediaInfo.Get(StreamKind.General, 0, "CodecID");
-            _logger.LogDebug("Format=({format}, version={version}), Profile={profile}, Codec={Codec}", Format, FormatVersion, Profile, Codec);
+            _logger.LogDebug("Format=({Format}, version={Version}), Profile={Profile}, Codec={Codec}", Format, FormatVersion, Profile, Codec);
             _logger.LogDebug("Retrieving audio tags from stream position 0");
             Tags = new AudioTagBuilder(mediaInfo, 0).Build();
             if (Size == 0)
@@ -625,11 +627,11 @@ namespace MediaInfo
             }
 
             var result = 0;
-            _logger.LogDebug("Found {count} video streams.", mediaInfo.CountGet(StreamKind.Video));
+            _logger.LogDebug("Found {Count} video streams.", mediaInfo.CountGet(StreamKind.Video));
             for (var i = 0; i < mediaInfo.CountGet(StreamKind.Video); ++i)
             {
                 var stream = new VideoStreamBuilder(mediaInfo, result++, i).Build();
-                _logger.LogDebug("Add video stream #{i}: codec={codec}, profile={profile}", i, stream.CodecName, stream.CodecProfile);
+                _logger.LogDebug("Add video stream #{Index}: codec={Codec}, profile={Profile}", i, stream.CodecName, stream.CodecProfile);
                 VideoStreams.Add(stream);
             }
 
@@ -641,7 +643,7 @@ namespace MediaInfo
                 _providerNumber,
                 out var duration);
                 Duration = (int)duration;
-                _logger.LogDebug("Set duration by video stream 0. Duration={duration}", TimeSpan.FromSeconds(Duration));
+                _logger.LogDebug("Set duration by video stream 0. Duration={Duration}", TimeSpan.FromSeconds(Duration));
             }
 
             // Fix 3D for some containers
@@ -658,7 +660,7 @@ namespace MediaInfo
                     video.Stereoscopic = (bool)isStereo ? StereoMode.Stereo : StereoMode.Mono;
                 }
 
-                _logger.LogDebug("Stereoscopic mode={mode}", video.Stereoscopic);
+                _logger.LogDebug("Stereoscopic mode={Mode}", video.Stereoscopic);
             }
 
             return result;
@@ -671,11 +673,11 @@ namespace MediaInfo
                 throw new ArgumentNullException(nameof(mediaInfo));
             }
 
-            _logger.LogDebug("Found {audios} audio streams.", mediaInfo.CountGet(StreamKind.Audio));
+            _logger.LogDebug("Found {Audios} audio streams.", mediaInfo.CountGet(StreamKind.Audio));
             for (var i = 0; i < mediaInfo.CountGet(StreamKind.Audio); ++i)
             {
                 var stream = new AudioStreamBuilder(mediaInfo, streamNumber++, i).Build();
-                _logger.LogDebug("Add audio stream #{i}: codec={codec}, friendly name={friendlyName}", i, stream.CodecName, stream.CodecFriendly);
+                _logger.LogDebug("Add audio stream #{Index}: codec={Codec}, friendly name={FriendlyName}", i, stream.CodecName, stream.CodecFriendly);
                 AudioStreams.Add(stream);
             }
 
@@ -687,7 +689,7 @@ namespace MediaInfo
                     _providerNumber,
                     out var duration);
                 Duration = (int)duration;
-                _logger.LogDebug("Set duration by audio stream 0. DurationDuration={duration}", TimeSpan.FromSeconds(Duration));
+                _logger.LogDebug("Set duration by audio stream 0. Duration={Duration}", TimeSpan.FromSeconds(Duration));
             }
 
             return streamNumber;
@@ -700,11 +702,11 @@ namespace MediaInfo
                 throw new ArgumentNullException(nameof(mediaInfo));
             }
 
-            _logger.LogDebug("Found {subtitles} subtitle streams.", mediaInfo.CountGet(StreamKind.Text));
+            _logger.LogDebug("Found {Subtitles} subtitle streams.", mediaInfo.CountGet(StreamKind.Text));
             for (var i = 0; i < mediaInfo.CountGet(StreamKind.Text); ++i)
             {
                 var stream = new SubtitleStreamBuilder(mediaInfo, streamNumber++, i).Build();
-                _logger.LogDebug("Add subtitle stream #{i}: format={format}", i, stream.Format);
+                _logger.LogDebug("Add subtitle stream #{Index}: format={Format}", i, stream.Format);
                 Subtitles.Add(stream);
             }
 
@@ -718,11 +720,11 @@ namespace MediaInfo
                 throw new ArgumentNullException(nameof(mediaInfo));
             }
 
-            _logger.LogDebug("Found {chapters} chapters.", mediaInfo.CountGet(StreamKind.Other));
+            _logger.LogDebug("Found {Chapters} chapters.", mediaInfo.CountGet(StreamKind.Other));
             for (var i = 0; i < mediaInfo.CountGet(StreamKind.Other); ++i)
             {
                 var chapter = new ChapterStreamBuilder(mediaInfo, streamNumber++, i).Build();
-                _logger.LogDebug("Add chapter #{i}: name={chapter}", i, chapter.Name);
+                _logger.LogDebug("Add chapter #{Index}: name={Chapter}", i, chapter.Name);
                 Chapters.Add(chapter);
             }
 
@@ -736,11 +738,11 @@ namespace MediaInfo
                 throw new ArgumentNullException(nameof(mediaInfo));
             }
 
-            _logger.LogDebug("Found {menus} menu items.", mediaInfo.CountGet(StreamKind.Menu));
+            _logger.LogDebug("Found {Menus} menu items.", mediaInfo.CountGet(StreamKind.Menu));
             for (var i = 0; i < mediaInfo.CountGet(StreamKind.Menu); ++i)
             {
                 var menu = new MenuStreamBuilder(mediaInfo, streamNumber++, i).Build();
-                _logger.LogDebug("Add menu #{i}: name={menu} duration={duration}", i, menu.Name, menu.Duration);
+                _logger.LogDebug("Add menu #{Index}: name={Menu} duration={Duration}", i, menu.Name, menu.Duration);
                 MenuStreams.Add(menu);
             }
         }
@@ -879,6 +881,7 @@ namespace MediaInfo
         /// <value>
         /// The best video stream.
         /// </value>
+        [JsonIgnore]
         public VideoStream BestVideoStream { get; private set; }
 
         /// <summary>
@@ -971,6 +974,7 @@ namespace MediaInfo
         /// <value>
         /// The best audio stream.
         /// </value>
+        [JsonIgnore]
         public AudioStream BestAudioStream { get; private set; }
 
         /// <summary>
@@ -1203,6 +1207,29 @@ namespace MediaInfo
         /// The media information text.
         /// </value>
         public string Text { get; private set; }
+
+        /// <summary>
+        /// Serializes the MediaInfoWrapper object to a JSON string using System.Text.Json
+        /// </summary>
+        public string ToJson(bool ignoreNullValues = true, bool ignoreEmptyCollections = true, bool writeIndented = false)
+        {
+            try
+            {
+                var options = new JsonSerializerOptions
+                {
+                    WriteIndented = writeIndented,
+                    DefaultIgnoreCondition = ignoreNullValues ? JsonIgnoreCondition.WhenWritingNull : JsonIgnoreCondition.Never,
+                    ReferenceHandler = ReferenceHandler.IgnoreCycles,
+                };
+
+                return JsonSerializer.Serialize(this, options);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error during serialization MediaInfoWrapper to JSON. Error:{Message}", ex.Message);
+                return string.Empty;
+            }
+        }
     }
 
 #if NET40 || NET45

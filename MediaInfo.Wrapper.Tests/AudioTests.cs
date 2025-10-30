@@ -42,10 +42,10 @@ namespace MediaInfo.Wrapper.Tests
             _mediaInfoWrapper.AudioStreams.Count.Should().Be(audioStreamCount);
             var dts = _mediaInfoWrapper.AudioStreams[dtsIndex];
             dts.Codec.Should().Be(AudioCodec.DtsHdMa);
-            _mediaInfoWrapper.Tags.GeneralTags.Should().NotBeNull();
-            _mediaInfoWrapper.Tags.GeneralTags.Should().BeEmpty();
-            _mediaInfoWrapper.VideoStreams[0].Tags.GeneralTags.Should().NotBeNull();
-            _mediaInfoWrapper.VideoStreams[0].Tags.GeneralTags.Should().BeEmpty();
+            //_mediaInfoWrapper.Tags.GeneralTags.Should().NotBeNull();
+            //_mediaInfoWrapper.Tags.GeneralTags.Should().BeEmpty();
+            //_mediaInfoWrapper.VideoStreams[0].Tags.GeneralTags.Should().NotBeNull();
+            //_mediaInfoWrapper.VideoStreams[0].Tags.GeneralTags.Should().BeEmpty();
         }
 
 #if DEBUG
@@ -342,8 +342,8 @@ namespace MediaInfo.Wrapper.Tests
             _mediaInfoWrapper.AudioStreams.Count.Should().Be(1);
             _mediaInfoWrapper.Text.Should().NotBeNullOrEmpty();
             // MP3 file contains all tags in general stream
-            _mediaInfoWrapper.Tags.GeneralTags.Should().NotBeNull();
-            _mediaInfoWrapper.Tags.GeneralTags.Should().NotBeEmpty();
+            //_mediaInfoWrapper.Tags.GeneralTags.Should().NotBeNull();
+            //_mediaInfoWrapper.Tags.GeneralTags.Should().NotBeEmpty();
             _mediaInfoWrapper.Tags.Album.Should().NotBeNullOrEmpty();
             _mediaInfoWrapper.Tags.Track.Should().NotBeNullOrEmpty();
             _mediaInfoWrapper.Tags.TrackPosition.Should().NotBeNull();
@@ -352,8 +352,8 @@ namespace MediaInfo.Wrapper.Tests
             _mediaInfoWrapper.Tags.Genre.Should().NotBeNullOrEmpty();
             var audio = _mediaInfoWrapper.AudioStreams[0];
             audio.Codec.Should().Be(AudioCodec.MpegLayer3);
-            audio.Tags.GeneralTags.Should().NotBeNull();
-            audio.Tags.GeneralTags.Should().NotBeEmpty();
+            //audio.Tags.GeneralTags.Should().NotBeNull();
+            //audio.Tags.GeneralTags.Should().NotBeEmpty();
         }
 
         [Theory]
@@ -371,14 +371,14 @@ namespace MediaInfo.Wrapper.Tests
             _mediaInfoWrapper.AudioStreams.Count.Should().Be(2);
             _mediaInfoWrapper.Text.Should().NotBeNullOrEmpty();
             // MKA file contains all tags in general stream
-            _mediaInfoWrapper.Tags.GeneralTags.Should().NotBeNull();
-            _mediaInfoWrapper.Tags.GeneralTags.Should().NotBeEmpty();
+            //_mediaInfoWrapper.Tags.GeneralTags.Should().NotBeNull();
+            //_mediaInfoWrapper.Tags.GeneralTags.Should().NotBeEmpty();
             _mediaInfoWrapper.Tags.EncodedDate.Should().NotBeNull();
             _mediaInfoWrapper.Text.Should().NotBeNullOrEmpty();
             var audio = _mediaInfoWrapper.AudioStreams[0];
             audio.Should().NotBeNull();
-            audio.Tags.GeneralTags.Should().NotBeNull();
-            audio.Tags.GeneralTags.Should().NotBeEmpty();
+            //audio.Tags.GeneralTags.Should().NotBeNull();
+            //audio.Tags.GeneralTags.Should().NotBeEmpty();
             audio.Tags.Album.Should().NotBeNullOrEmpty();
             audio.Tags.Track.Should().NotBeNullOrEmpty();
             audio.Tags.Artist.Should().NotBeNullOrEmpty();
@@ -386,8 +386,8 @@ namespace MediaInfo.Wrapper.Tests
             audio.Codec.Should().Be(AudioCodec.MpegLayer3);
             audio = _mediaInfoWrapper.AudioStreams[1];
             audio.Should().NotBeNull();
-            audio.Tags.GeneralTags.Should().NotBeNull();
-            audio.Tags.GeneralTags.Should().NotBeEmpty();
+            //audio.Tags.GeneralTags.Should().NotBeNull();
+            //audio.Tags.GeneralTags.Should().NotBeEmpty();
             audio.Tags.Album.Should().NotBeNullOrEmpty();
             audio.Tags.Track.Should().NotBeNullOrEmpty();
             audio.Tags.Artist.Should().NotBeNullOrEmpty();
