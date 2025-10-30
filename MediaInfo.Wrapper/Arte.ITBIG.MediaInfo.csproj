@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>net6.0</TargetFrameworks>
     <RootNamespace>MediaInfo</RootNamespace>
-    <Version>$(VersionPrefix)21.9.4.22</Version>
+    <Version>$(VersionPrefix)21.9.5</Version>
     <AssemblyVersion>$(MediaInfoFileVersion)</AssemblyVersion>
     <FileVersion>$(MediaInfoFileVersion)</FileVersion>
     <Company>$(PackageCompany)</Company>
