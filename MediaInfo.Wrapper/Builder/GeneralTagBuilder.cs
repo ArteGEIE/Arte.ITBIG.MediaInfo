@@ -6,27 +6,27 @@
 
 #endregion
 
+using MediaInfo.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using MediaInfo.Model;
 
 namespace MediaInfo.Builder
 {
-  /// <summary>
-  /// Converts the string representation of a value to specified type
-  /// </summary>
-  /// <typeparam name="T">The type of the tag</typeparam>
-  /// <param name="source">The source value.</param>
-  /// <param name="result">The result.</param>
-  /// <returns><b>true</b> if s was converted successfully; otherwise, <b>false</b>.</returns>
-  public delegate bool ParseDelegate<T>(string source, out T result);
+    /// <summary>
+    /// Converts the string representation of a value to specified type
+    /// </summary>
+    /// <typeparam name="T">The type of the tag</typeparam>
+    /// <param name="source">The source value.</param>
+    /// <param name="result">The result.</param>
+    /// <returns><b>true</b> if s was converted successfully; otherwise, <b>false</b>.</returns>
+    public delegate bool ParseDelegate<T>(string source, out T result);
 
-  internal class GeneralTagBuilder<T> where T : BaseTags, new()
-  {
-    #region Tag items
+    internal class GeneralTagBuilder<T> where T : BaseTags, new()
+    {
+        #region Tag items
 
-    private static readonly List<(NativeMethods.General Tag, ParseDelegate<object> ParseFunc)> GeneralTagItems = new()
+        private static readonly List<(NativeMethods.General Tag, ParseDelegate<object> ParseFunc)> GeneralTagItems = new()
     {
       (NativeMethods.General.General_Collection, TagBuilderHelper.TryGetString),
       (NativeMethods.General.General_Season, TagBuilderHelper.TryGetString),
@@ -125,186 +125,186 @@ namespace MediaInfo.Builder
       (NativeMethods.General.General_Cover_Data, TagBuilderHelper.TryGetString),
     };
 
-    #endregion
+        #endregion
 
-    public GeneralTagBuilder(MediaInfo mediaInfo, int streamPosition)
-    {
-      MediaInfo = mediaInfo ?? throw new ArgumentNullException(nameof(mediaInfo));
-      StreamPosition = streamPosition;
-    }
-
-    /// <summary>
-    /// Gets the media information.
-    /// </summary>
-    protected MediaInfo MediaInfo { get; }
-
-    protected int StreamPosition { get; }
-
-    public virtual T Build()
-    {
-      var result = new T();
-      foreach (var (tag, parseFunc) in GeneralTagItems)
-      {
-        var value = MediaInfo.Get(StreamKind.General, StreamPosition, (int)tag);
-        if (!string.IsNullOrEmpty(value) && parseFunc(value, out var tagValue))
+        public GeneralTagBuilder(MediaInfo mediaInfo, int streamPosition)
         {
-          result.GeneralTags.Add(tag, tagValue);
+            MediaInfo = mediaInfo ?? throw new ArgumentNullException(nameof(mediaInfo));
+            StreamPosition = streamPosition;
         }
-      }
 
-      // parse covers
-      result.GeneralTags.TryGetValue(NativeMethods.General.General_Cover_Type, out var coverType);
-      result.GeneralTags.TryGetValue(NativeMethods.General.General_Cover_Mime, out var coverMime);
-      result.GeneralTags.TryGetValue(NativeMethods.General.General_Cover_Description, out var coverDescription);
-      result.GeneralTags.TryGetValue(NativeMethods.General.General_Cover, out var cover);
+        /// <summary>
+        /// Gets the media information.
+        /// </summary>
+        protected MediaInfo MediaInfo { get; }
 
-      if (result.GeneralTags.TryGetValue(NativeMethods.General.General_Cover_Data, out var coverData) ||
-          coverType != null ||
-          coverMime != null ||
-          coverDescription != null ||
-          cover != null)
-      {
-        var coverDataItems = ((string)coverData)?.Split(new[] { " / " }, StringSplitOptions.RemoveEmptyEntries);
-        var coverTypeItems = ((string)coverType)?.Split(new[] { " / " }, StringSplitOptions.RemoveEmptyEntries);
-        var coverMimeItems = ((string)coverMime)?.Split(new[] { " / " }, StringSplitOptions.RemoveEmptyEntries);
-        var coverItems = ((string)cover)?.Split(new[] { " / " }, StringSplitOptions.RemoveEmptyEntries);
-        var coverDescriptionItems = ((string)coverDescription)?.Split(new[] { " / " }, StringSplitOptions.RemoveEmptyEntries);
-        var itemCount = new[] { coverDataItems?.Length ?? 0, coverTypeItems?.Length ?? 0, coverMimeItems?.Length ?? 0, coverDescriptionItems?.Length ?? 0, coverItems?.Length ?? 0 }.Max();
-        if (itemCount > 0)
+        protected int StreamPosition { get; }
+
+        public virtual T Build()
         {
-          var covers = new List<CoverInfo>(itemCount);
-          for (var i = 0; i < itemCount; ++i)
-          {
-            var data = coverDataItems.TryGet(i, string.Empty) ?? string.Empty;
-            covers.Add(new CoverInfo
+            var result = new T();
+            foreach (var (tag, parseFunc) in GeneralTagItems)
             {
-              Exists = ToBool(coverItems.TryGet(i, string.Empty)),
-              Description = coverDescriptionItems?.TryGet(i, string.Empty) ?? string.Empty,
-              Type = coverTypeItems?.TryGet(i, string.Empty) ?? string.Empty,
-              Mime = coverMimeItems?.TryGet(i, string.Empty) ?? string.Empty,
-              Data = string.IsNullOrEmpty(data) ? null : Convert.FromBase64String(data)
-            });
-          }
+                var value = MediaInfo.Get(StreamKind.General, StreamPosition, (int)tag);
+                if (!string.IsNullOrEmpty(value) && parseFunc(value, out var tagValue))
+                {
+                    result.GeneralTags.Add(tag, tagValue);
+                }
+            }
 
-          result.Covers = covers;
+            // parse covers
+            result.GeneralTags.TryGetValue(NativeMethods.General.General_Cover_Type, out var coverType);
+            result.GeneralTags.TryGetValue(NativeMethods.General.General_Cover_Mime, out var coverMime);
+            result.GeneralTags.TryGetValue(NativeMethods.General.General_Cover_Description, out var coverDescription);
+            result.GeneralTags.TryGetValue(NativeMethods.General.General_Cover, out var cover);
+
+            if (result.GeneralTags.TryGetValue(NativeMethods.General.General_Cover_Data, out var coverData) ||
+                coverType != null ||
+                coverMime != null ||
+                coverDescription != null ||
+                cover != null)
+            {
+                var coverDataItems = ((string)coverData)?.Split(new[] { " / " }, StringSplitOptions.RemoveEmptyEntries);
+                var coverTypeItems = ((string)coverType)?.Split(new[] { " / " }, StringSplitOptions.RemoveEmptyEntries);
+                var coverMimeItems = ((string)coverMime)?.Split(new[] { " / " }, StringSplitOptions.RemoveEmptyEntries);
+                var coverItems = ((string)cover)?.Split(new[] { " / " }, StringSplitOptions.RemoveEmptyEntries);
+                var coverDescriptionItems = ((string)coverDescription)?.Split(new[] { " / " }, StringSplitOptions.RemoveEmptyEntries);
+                var itemCount = new[] { coverDataItems?.Length ?? 0, coverTypeItems?.Length ?? 0, coverMimeItems?.Length ?? 0, coverDescriptionItems?.Length ?? 0, coverItems?.Length ?? 0 }.Max();
+                if (itemCount > 0)
+                {
+                    var covers = new List<CoverInfo>(itemCount);
+                    for (var i = 0; i < itemCount; ++i)
+                    {
+                        var data = coverDataItems.TryGet(i, string.Empty) ?? string.Empty;
+                        covers.Add(new CoverInfo
+                        {
+                            Exists = ToBool(coverItems.TryGet(i, string.Empty)),
+                            Description = coverDescriptionItems?.TryGet(i, string.Empty) ?? string.Empty,
+                            Type = coverTypeItems?.TryGet(i, string.Empty) ?? string.Empty,
+                            Mime = coverMimeItems?.TryGet(i, string.Empty) ?? string.Empty,
+                            Data = string.IsNullOrEmpty(data) ? null : Convert.FromBase64String(data)
+                        });
+                    }
+
+                    result.Covers = covers;
+                }
+                else
+                {
+                    result.Covers = Enumerable.Empty<CoverInfo>();
+                }
+            }
+            else
+            {
+                result.Covers = Enumerable.Empty<CoverInfo>();
+            }
+
+            if (!result.GeneralTags.ContainsKey(NativeMethods.General.General_Album_Performer))
+            {
+                var value = MediaInfo.Get(StreamKind.Audio, StreamPosition, "ARTIST");
+                if (!string.IsNullOrEmpty(value))
+                {
+                    result.GeneralTags.Add(NativeMethods.General.General_Album_Performer, value);
+                }
+            }
+
+            if (!result.GeneralTags.ContainsKey(NativeMethods.General.General_Title))
+            {
+                var value = MediaInfo.Get(StreamKind.Audio, StreamPosition, "Title");
+                if (!string.IsNullOrEmpty(value))
+                {
+                    result.GeneralTags.Add(NativeMethods.General.General_Title, value);
+                }
+            }
+
+            if (!result.GeneralTags.ContainsKey(NativeMethods.General.General_Tagged_Date))
+            {
+                var value = MediaInfo.Get(StreamKind.Audio, StreamPosition, "DATE_TAGGED").TryGetDate(out DateTime res) ? (DateTime?)res : null;
+                if (value != null)
+                {
+                    result.GeneralTags.Add(NativeMethods.General.General_Tagged_Date, value);
+                }
+            }
+
+            if (!result.GeneralTags.ContainsKey(NativeMethods.General.General_Genre))
+            {
+                var value = MediaInfo.Get(StreamKind.Audio, StreamPosition, "GENRE");
+                if (!string.IsNullOrEmpty(value))
+                {
+                    result.GeneralTags.Add(NativeMethods.General.General_Genre, value);
+                }
+            }
+
+            if (!result.GeneralTags.ContainsKey(NativeMethods.General.General_Rating))
+            {
+                var value = MediaInfo.Get(StreamKind.Audio, StreamPosition, "RATING").TryGetDouble(out double res) ? (double?)res : null;
+                if (value != null)
+                {
+                    result.GeneralTags.Add(NativeMethods.General.General_Rating, value);
+                }
+            }
+
+            if (!result.GeneralTags.ContainsKey(NativeMethods.General.General_Released_Date))
+            {
+                var value = MediaInfo.Get(StreamKind.Audio, StreamPosition, "Released_Date").TryGetDate(out DateTime res) ? (DateTime?)res : null;
+                if (value != null)
+                {
+                    result.GeneralTags.Add(NativeMethods.General.General_Released_Date, value);
+                }
+            }
+
+            if (!result.GeneralTags.ContainsKey(NativeMethods.General.General_Encoded_Library))
+            {
+                var value = MediaInfo.Get(StreamKind.Audio, StreamPosition, "Encoded_Library");
+                if (!string.IsNullOrEmpty(value))
+                {
+                    result.GeneralTags.Add(NativeMethods.General.General_Encoded_Library, value);
+                }
+            }
+
+            if (!result.GeneralTags.ContainsKey((NativeMethods.General)1000) &&
+                MediaInfo.Get(StreamKind.General, StreamPosition, "Stereoscopic").TryGetBool(out var stereoscopic))
+            {
+                result.GeneralTags.Add((NativeMethods.General)1000, stereoscopic);
+            }
+
+            if (!result.GeneralTags.ContainsKey((NativeMethods.General)1001) &&
+                MediaInfo.Get(StreamKind.General, StreamPosition, "StereoscopicLayout").TryGetStereoMode(out var stereoscopicLayout))
+            {
+                result.GeneralTags.Add((NativeMethods.General)1001, stereoscopicLayout);
+            }
+
+            if (!result.GeneralTags.ContainsKey((NativeMethods.General)1002) &&
+                MediaInfo.Get(StreamKind.General, StreamPosition, "StereoscopicSkip").TryGetInt(out int stereoscopicSkip))
+            {
+                result.GeneralTags.Add((NativeMethods.General)1002, stereoscopicSkip);
+            }
+
+            return result;
         }
-        else
-        {
-          result.Covers = Enumerable.Empty<CoverInfo>();
-        }
-      }
-      else
-      {
-        result.Covers = Enumerable.Empty<CoverInfo>();
-      }
 
-      if (!result.GeneralTags.ContainsKey(NativeMethods.General.General_Album_Performer))
-      {
-        var value = MediaInfo.Get(StreamKind.Audio, StreamPosition, "ARTIST");
-        if (!string.IsNullOrEmpty(value))
-        {
-          result.GeneralTags.Add(NativeMethods.General.General_Album_Performer, value);
-        }
-      }
-
-      if (!result.GeneralTags.ContainsKey(NativeMethods.General.General_Title))
-      {
-        var value = MediaInfo.Get(StreamKind.Audio, StreamPosition, "Title");
-        if (!string.IsNullOrEmpty(value))
-        {
-          result.GeneralTags.Add(NativeMethods.General.General_Title, value);
-        }
-      }
-
-      if (!result.GeneralTags.ContainsKey(NativeMethods.General.General_Tagged_Date))
-      {
-        var value = MediaInfo.Get(StreamKind.Audio, StreamPosition, "DATE_TAGGED").TryGetDate(out DateTime res) ? (DateTime?)res : null;
-        if (value != null)
-        {
-          result.GeneralTags.Add(NativeMethods.General.General_Tagged_Date, value);
-        }
-      }
-
-      if (!result.GeneralTags.ContainsKey(NativeMethods.General.General_Genre))
-      {
-        var value = MediaInfo.Get(StreamKind.Audio, StreamPosition, "GENRE");
-        if (!string.IsNullOrEmpty(value))
-        {
-          result.GeneralTags.Add(NativeMethods.General.General_Genre, value);
-        }
-      }
-
-      if (!result.GeneralTags.ContainsKey(NativeMethods.General.General_Rating))
-      {
-        var value = MediaInfo.Get(StreamKind.Audio, StreamPosition, "RATING").TryGetDouble(out double res) ? (double?)res : null;
-        if (value != null)
-        {
-          result.GeneralTags.Add(NativeMethods.General.General_Rating, value);
-        }
-      }
-
-      if (!result.GeneralTags.ContainsKey(NativeMethods.General.General_Released_Date))
-      {
-        var value = MediaInfo.Get(StreamKind.Audio, StreamPosition, "Released_Date").TryGetDate(out DateTime res) ? (DateTime?)res : null;
-        if (value != null)
-        {
-          result.GeneralTags.Add(NativeMethods.General.General_Released_Date, value);
-        }
-      }
-
-      if (!result.GeneralTags.ContainsKey(NativeMethods.General.General_Encoded_Library))
-      {
-        var value = MediaInfo.Get(StreamKind.Audio, StreamPosition, "Encoded_Library");
-        if (!string.IsNullOrEmpty(value))
-        {
-          result.GeneralTags.Add(NativeMethods.General.General_Encoded_Library, value);
-        }
-      }
-
-      if (!result.GeneralTags.ContainsKey((NativeMethods.General)1000) &&
-          MediaInfo.Get(StreamKind.General, StreamPosition, "Stereoscopic").TryGetBool(out var stereoscopic))
-      {
-        result.GeneralTags.Add((NativeMethods.General)1000, stereoscopic);
-      }
-
-      if (!result.GeneralTags.ContainsKey((NativeMethods.General)1001) &&
-          MediaInfo.Get(StreamKind.General, StreamPosition, "StereoscopicLayout").TryGetStereoMode(out var stereoscopicLayout))
-      {
-        result.GeneralTags.Add((NativeMethods.General)1001, stereoscopicLayout);
-      }
-
-      if (!result.GeneralTags.ContainsKey((NativeMethods.General)1002) &&
-          MediaInfo.Get(StreamKind.General, StreamPosition, "StereoscopicSkip").TryGetInt(out int stereoscopicSkip))
-      {
-        result.GeneralTags.Add((NativeMethods.General)1002, stereoscopicSkip);
-      }
-
-      return result;
+        protected static bool ToBool(string source) =>
+          string.Equals(source, "t", StringComparison.OrdinalIgnoreCase)
+            || string.Equals(source, "true", StringComparison.OrdinalIgnoreCase)
+            || string.Equals(source, "y", StringComparison.OrdinalIgnoreCase)
+            || string.Equals(source, "yes", StringComparison.OrdinalIgnoreCase)
+            || string.Equals(source, "1", StringComparison.OrdinalIgnoreCase);
     }
 
-    protected static bool ToBool(string source) =>
-      string.Equals(source, "t", StringComparison.OrdinalIgnoreCase)
-        || string.Equals(source, "true", StringComparison.OrdinalIgnoreCase)
-        || string.Equals(source, "y", StringComparison.OrdinalIgnoreCase)
-        || string.Equals(source, "yes", StringComparison.OrdinalIgnoreCase)
-        || string.Equals(source, "1", StringComparison.OrdinalIgnoreCase);
-  }
-
-  internal static class ArrayExtensions
-  {
-    public static T TryGet<T>(this T[] array, int index, T defaultValue)
+    internal static class ArrayExtensions
     {
-      if (index < 0)
-      {
-        throw new ArgumentException($"Parameter {nameof(index)} is a negative value.");
-      }
+        public static T TryGet<T>(this T[] array, int index, T defaultValue)
+        {
+            if (index < 0)
+            {
+                throw new ArgumentException($"Parameter {nameof(index)} is a negative value.");
+            }
 
-      if (array is null)
-      {
-        return defaultValue;
-      }
+            if (array is null)
+            {
+                return defaultValue;
+            }
 
-      return array.Length > index ? array[index] : defaultValue;
+            return array.Length > index ? array[index] : defaultValue;
+        }
     }
-  }
 }

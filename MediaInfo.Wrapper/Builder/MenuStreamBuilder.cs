@@ -6,43 +6,43 @@
 
 #endregion
 
-using System;
 using MediaInfo.Model;
+using System;
 
 namespace MediaInfo.Builder
 {
-  /// <summary>
-  /// Describes method to build menu stream.
-  /// </summary>
-  internal class MenuStreamBuilder : MediaStreamBuilder<MenuStream>
-  {
-    public MenuStreamBuilder(MediaInfo info, int number, int position)
-      : base(info, number, position)
+    /// <summary>
+    /// Describes method to build menu stream.
+    /// </summary>
+    internal class MenuStreamBuilder : MediaStreamBuilder<MenuStream>
     {
-    }
-
-    /// <inheritdoc />
-    public override MediaStreamKind Kind => MediaStreamKind.Menu;
-
-    /// <inheritdoc />
-    protected override StreamKind StreamKind => StreamKind.Menu;
-
-    /// <inheritdoc />
-    public override MenuStream Build()
-    {
-      var result = base.Build();
-      var chapterStartId = Get<int>((int)NativeMethods.Menu.Menu_Chapters_Pos_Begin, InfoKind.Text, TagBuilderHelper.TryGetInt);
-      var chapterEndId = Get<int>((int)NativeMethods.Menu.Menu_Chapters_Pos_End, InfoKind.Text, TagBuilderHelper.TryGetInt);
-      for (var i = chapterStartId; i < chapterEndId; ++i)
-      {
-        result.Chapters.Add(new Chapter
+        public MenuStreamBuilder(MediaInfo info, int number, int position)
+          : base(info, number, position)
         {
-          Name = Get(i, InfoKind.Text),
-          Position = Get<TimeSpan>(i, InfoKind.NameText, TimeSpan.TryParse)
-        });
-      }
+        }
 
-      return result;
+        /// <inheritdoc />
+        public override MediaStreamKind Kind => MediaStreamKind.Menu;
+
+        /// <inheritdoc />
+        protected override StreamKind StreamKind => StreamKind.Menu;
+
+        /// <inheritdoc />
+        public override MenuStream Build()
+        {
+            var result = base.Build();
+            var chapterStartId = Get<int>((int)NativeMethods.Menu.Menu_Chapters_Pos_Begin, InfoKind.Text, TagBuilderHelper.TryGetInt);
+            var chapterEndId = Get<int>((int)NativeMethods.Menu.Menu_Chapters_Pos_End, InfoKind.Text, TagBuilderHelper.TryGetInt);
+            for (var i = chapterStartId; i < chapterEndId; ++i)
+            {
+                result.Chapters.Add(new Chapter
+                {
+                    Name = Get(i, InfoKind.Text),
+                    Position = Get<TimeSpan>(i, InfoKind.NameText, TimeSpan.TryParse)
+                });
+            }
+
+            return result;
+        }
     }
-  }
 }

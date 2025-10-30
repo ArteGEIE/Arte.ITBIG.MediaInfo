@@ -11,14 +11,14 @@ using Xunit;
 
 namespace MediaInfo.Wrapper.Tests
 {
-  public class FactInDebugOnlyAttribute : FactAttribute
-  {
-    public FactInDebugOnlyAttribute()
+    public class FactInDebugOnlyAttribute : FactAttribute
     {
-      if (!Debugger.IsAttached)
-      {
-        Skip = "Only running in interactive mode.";
-      }
+        public FactInDebugOnlyAttribute()
+        {
+            if (!Debugger.IsAttached)
+            {
+                Skip = "Only running in interactive mode.";
+            }
+        }
     }
-  }
 }

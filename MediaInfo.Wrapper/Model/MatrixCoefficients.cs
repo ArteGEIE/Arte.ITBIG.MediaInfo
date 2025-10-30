@@ -1,8 +1,11 @@
-﻿namespace MediaInfo.Model
+﻿using System.Text.Json.Serialization;
+
+namespace MediaInfo.Model
 {
     /// <summary>
     /// Describes video transfer characteristics
     /// </summary>
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum MatrixCoefficient
     {
         /// <summary>

@@ -16,30 +16,30 @@ using Xunit.Abstractions;
 
 namespace MediaInfo.Wrapper.Tests
 {
-  public class TestLogger : ILogger
-  {
-    private readonly ITestOutputHelper _testOutputHelper;
+    public class TestLogger : ILogger
+    {
+        private readonly ITestOutputHelper _testOutputHelper;
 #if !NET5_0_OR_GREATER
     private readonly Regex _regex = new(@"\{(?<logValue>[^\}]+)\}", RegexOptions.Singleline | RegexOptions.Compiled);
 #endif
 
         public TestLogger(ITestOutputHelper testOutputHelper)
-    {
-      _testOutputHelper = testOutputHelper;
-    }
+        {
+            _testOutputHelper = testOutputHelper;
+        }
 
 #if NET5_0_OR_GREATER
-    public IDisposable BeginScope<TState>(TState state)
-    {
-        throw new NotImplementedException();
-    }
+        public IDisposable BeginScope<TState>(TState state)
+        {
+            throw new NotImplementedException();
+        }
 
-    public bool IsEnabled(LogLevel logLevel) => true;
+        public bool IsEnabled(LogLevel logLevel) => true;
 
-    public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
-    {
-      _testOutputHelper.WriteLine($"{logLevel}: {formatter(state, exception)}");
-    }
+        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
+        {
+            _testOutputHelper.WriteLine($"{logLevel}: {formatter(state, exception)}");
+        }
 #else
     public void Log(LogLevel loglevel, string message, params object[] parameters)
     {
@@ -60,5 +60,5 @@ namespace MediaInfo.Wrapper.Tests
       _testOutputHelper.WriteLine($"{loglevel}: {string.Format(processedMessage, parameters)}");
     }
 #endif
-  }
+    }
 }

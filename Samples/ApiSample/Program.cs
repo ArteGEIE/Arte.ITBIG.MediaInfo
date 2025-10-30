@@ -6,8 +6,8 @@
 
 #endregion
 
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
+using System.Threading.Tasks;
 
 namespace ApiSample;
 

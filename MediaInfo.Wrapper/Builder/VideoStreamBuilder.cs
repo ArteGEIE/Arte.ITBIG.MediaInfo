@@ -417,6 +417,7 @@ namespace MediaInfo.Builder
             result.Standard = Get<VideoStandard>((int)NativeMethods.Video.Video_Standard, InfoKind.Text, TryGetStandard);
             result.SubSampling = Get<ChromaSubSampling>((int)NativeMethods.Video.Video_ChromaSubsampling, InfoKind.Text, TryGetSubSampling);
             result.CodecName = GetFullCodecName(result.CodecProfile);
+            result.CodecId = Get((int)NativeMethods.Video.Video_CodecID, InfoKind.Text);
             result.Hdr = Get<Hdr>((int)NativeMethods.Video.Video_HDR_Format, InfoKind.Text, TryGetHdr);
             if (result.Hdr == Hdr.None)
             {
@@ -424,6 +425,8 @@ namespace MediaInfo.Builder
             }
 
             result.Tags = new VideoTagBuilder(Info, StreamPosition).Build();
+
+            result.BitrateMode = Get<BitrateMode>((int)NativeMethods.Video.Video_BitRate_Mode, InfoKind.Text, TagBuilderHelper.TryGetBitrateMode);
 
             return result;
         }

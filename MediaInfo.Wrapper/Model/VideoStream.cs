@@ -8,6 +8,7 @@
 
 using System;
 using System.Drawing;
+using System.Runtime.Serialization;
 
 namespace MediaInfo.Model
 {
@@ -186,6 +187,14 @@ namespace MediaInfo.Model
         public string CodecName { get; set; }
 
         /// <summary>
+        /// Gets or sets the codec id of video
+        /// </summary>
+        /// <value>
+        /// Video codec id.
+        /// </value>
+        public string CodecId { get; set; }
+
+        /// <summary>
         /// Gets the video resolution.
         /// </summary>
         /// <value>
@@ -208,6 +217,15 @@ namespace MediaInfo.Model
         /// The video stream tags.
         /// </value>
         public VideoTags Tags { get; internal set; } = new VideoTags();
+
+        /// <summary>
+        /// Gets the bitrate mode of stream.
+        /// </summary>
+        /// <value>
+        /// The bitrate mode of stream.
+        /// </value>
+        [DataMember(Name = "bitrateMode")]
+        public BitrateMode BitrateMode { get; set; }
 
         private string GetVideoResolution()
         {

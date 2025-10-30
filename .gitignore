@@ -263,3 +263,4 @@ Audio/
 Video/
 packages/
 nuget.config
+/MediaInfo.Wrapper.Tests/Data/034755-725-A_UHD25_Op1b.mxf

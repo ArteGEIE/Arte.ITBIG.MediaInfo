@@ -11,16 +11,16 @@ using System.Collections.Generic;
 
 namespace MediaInfo
 {
-  /// <summary>
-  /// Describes methods to manipulate language data
-  /// </summary>
-  public static class LanguageHelper
-  {
-    private const string UnknownLanguage = "Unknown";
+    /// <summary>
+    /// Describes methods to manipulate language data
+    /// </summary>
+    public static class LanguageHelper
+    {
+        private const string UnknownLanguage = "Unknown";
 
-    #region Dictionary LCID - langage name
+        #region Dictionary LCID - langage name
 
-    private static readonly Dictionary<int, string> LanguageLcids = new Dictionary<int, string>
+        private static readonly Dictionary<int, string> LanguageLcids = new Dictionary<int, string>
     {
       { 0x0401, "Arabic" },
       { 0x0402, "Bulgarian" },
@@ -139,11 +139,11 @@ namespace MediaInfo
       { 0x0491, "Scottish Gaelic" },
     };
 
-    #endregion
+        #endregion
 
-    #region Dictionary ISO-639 - LCID
+        #region Dictionary ISO-639 - LCID
 
-    private static readonly Dictionary<string, int> Lcids = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase)
+        private static readonly Dictionary<string, int> Lcids = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase)
     {
       { "ARA", 0x0401 },
       { "AR", 0x0401 },
@@ -388,11 +388,11 @@ namespace MediaInfo
       { "SMN", 0x283b },
     };
 
-    #endregion
+        #endregion
 
-    #region Dictionary ISO-639 - language name
+        #region Dictionary ISO-639 - language name
 
-    private static readonly Dictionary<string, string> Languages = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+        private static readonly Dictionary<string, string> Languages = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
     {
       { "ABK", "Abkhazian" },
       { "AB", "Abkhazian" },
@@ -1005,30 +1005,30 @@ namespace MediaInfo
       { "UNK", UnknownLanguage }
     };
 
-    #endregion
+        #endregion
 
-    /// <summary>
-    /// Gets the language by LCID.
-    /// </summary>
-    /// <param name="lcid">The LCID.</param>
-    /// <returns>Returns language name</returns>
-    public static string GetLanguageByLcid(int lcid) =>
-      LanguageLcids.TryGetValue((lcid & 0x3FF) + 0x400, out var result) ? result : UnknownLanguage;
+        /// <summary>
+        /// Gets the language by LCID.
+        /// </summary>
+        /// <param name="lcid">The LCID.</param>
+        /// <returns>Returns language name</returns>
+        public static string GetLanguageByLcid(int lcid) =>
+          LanguageLcids.TryGetValue((lcid & 0x3FF) + 0x400, out var result) ? result : UnknownLanguage;
 
-    /// <summary>
-    /// Gets language by the short language name.
-    /// </summary>
-    /// <param name="source">The short language name.</param>
-    /// <returns>Returns language name.</returns>
-    public static string GetLanguageByShortName(string source) =>
-      Languages.TryGetValue(source, out var result) ? result : string.Empty;
+        /// <summary>
+        /// Gets language by the short language name.
+        /// </summary>
+        /// <param name="source">The short language name.</param>
+        /// <returns>Returns language name.</returns>
+        public static string GetLanguageByShortName(string source) =>
+          Languages.TryGetValue(source, out var result) ? result : string.Empty;
 
-    /// <summary>
-    /// Gets LCID by short language name.
-    /// </summary>
-    /// <param name="source">The short language.</param>
-    /// <returns>Returns LCID.</returns>
-    public static int GetLcidByShortName(string source) =>
-      Lcids.TryGetValue(source, out var result) ? result : 0;
-  }
+        /// <summary>
+        /// Gets LCID by short language name.
+        /// </summary>
+        /// <param name="source">The short language.</param>
+        /// <returns>Returns LCID.</returns>
+        public static int GetLcidByShortName(string source) =>
+          Lcids.TryGetValue(source, out var result) ? result : 0;
+    }
 }
