@@ -54,5 +54,14 @@ namespace MediaInfo.Model
         /// The stream size (bytes).
         /// </value>
         public long StreamSize { get; set; }
+
+        /// <summary>
+        /// Code language.
+        /// </summary>
+        public string LanguageId { get; internal set; }
+        public string LanguageString1 { get; internal set; }
+        public string LanguageString2 { get; internal set; }
+        public string LanguageString3 { get; internal set; }
+        public string LanguageString4 { get; internal set; }
     }
 }
