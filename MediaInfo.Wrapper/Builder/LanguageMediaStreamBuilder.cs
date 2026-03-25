@@ -32,6 +32,11 @@ namespace MediaInfo.Builder
         {
             var result = base.Build();
             var language = Get("Language").ToLower();
+            result.LanguageId = language;
+            result.LanguageString1 = Get("Language_String1");
+            result.LanguageString2 = Get("Language_String2");
+            result.LanguageString3 = Get("Language_String3").ToUpper();
+            result.LanguageString4 = Get("Language_String4");
             result.Language = LanguageHelper.GetLanguageByShortName(language);
             result.Default = Get<bool>("Default", TagBuilderHelper.TryGetBool);
             result.Forced = Get<bool>("Forced", TagBuilderHelper.TryGetBool);
