@@ -9,13 +9,13 @@ It is .NET wrapper for [MediaArea MediaInfo](https://github.com/MediaArea/MediaI
 
 * Wraps the MediaInfo library
 * Provides properties for almost all information  available using the MediaInfo library
-* Targets .NET 6
+* Targets .NET 10
 
 ## Available packages
 
 | Framework | Package |
 |-----------|---------|
-| .NET 6.0 | [![NuGet Badge](https://img.shields.io/badge/package-Arte.ITBIG.MediaInfo-blue)](https://www.github.com/ArteGEIE/Arte.ITBIG.MediaInfo/pkg/nuget/Arte.ITBIG.MediaInfo) |
+| .NET 10.0 | [![NuGet Badge](https://img.shields.io/badge/package-Arte.ITBIG.MediaInfo-blue)](https://www.github.com/ArteGEIE/Arte.ITBIG.MediaInfo/pkg/nuget/Arte.ITBIG.MediaInfo) |
 
 ## Installation
 
@@ -24,7 +24,7 @@ There are a package for .NET Core and it's designed for ASP.NET Core services on
 ### .NET Core
 
 ```Shell{:copy}
-dotnet add package Arte.ITBIG.MediaInfo --version 21.9.4
+dotnet add package Arte.ITBIG.MediaInfo --version 26.0.1
 ```
 
 ## Usage
@@ -431,20 +431,6 @@ sudo pacman -S libcurl-gnutls libzen libmms libssh librtmp0
 ```
 
 ### Docker
-
-#### .NET 6.0
-
-```Dockerfile{:copy}
-FROM mcr.microsoft.com/dotnet/aspnet:6.0
-RUN apt-get update && apt-get install -y libzen0v5 libmms0 openssl zlib1g zlibc libnghttp2-14 librtmp1 curl libcurl4-gnutls-dev libglib2.0
-```
-
-#### .NET 8.0
-
-```Dockerfile{:copy}
-FROM mcr.microsoft.com/dotnet/aspnet:8.0
-RUN apt-get update && apt-get install -y libzen0v5 libmms0 openssl zlib1g zlibc libnghttp2-14 librtmp1 curl libcurl4-gnutls-dev libglib2.0
-```
 
 #### .NET 10.0
 
