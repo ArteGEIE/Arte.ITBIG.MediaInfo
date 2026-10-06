@@ -1,7 +1,7 @@
-﻿#region Copyright (C) 2017-2022 Yaroslav Tatarenko
+﻿#region Copyright (C) 2017-2026 Yaroslav Tatarenko
 
-// Copyright (C) 2017-2022 Yaroslav Tatarenko
-// This product uses MediaInfo library, Copyright (c) 2002-2021 MediaArea.net SARL. 
+// Copyright (C) 2017-2026 Yaroslav Tatarenko
+// This product uses MediaInfo library, Copyright (c) 2002-2026 MediaArea.net SARL. 
 // https://mediaarea.net
 
 #endregion
@@ -73,7 +73,7 @@ public class VideoStream : LanguageMediaStream
     /// </summary>
     [DataMember(Name = "format")]
     [JsonPropertyName("format")]
-    public string Format { get; set; }
+    public string? Format { get; set; }
 
     /// <summary>
     /// A video codec.
@@ -87,7 +87,7 @@ public class VideoStream : LanguageMediaStream
     /// </summary>
     [DataMember(Name = "codecProfile")]
     [JsonPropertyName("codecProfile")]
-    public string CodecProfile { get; set; }
+    public string? CodecProfile { get; set; }
 
     /// <summary>
     /// A video standard.
@@ -143,19 +143,19 @@ public class VideoStream : LanguageMediaStream
     /// </summary>
     [DataMember(Name = "codecName")]
     [JsonPropertyName("codecName")]
-    public string CodecName { get; set; }
+    public string? CodecName { get; set; }
 
     /// <summary>
     /// A video resolution.
     /// </summary>
     [DataMember(Name = "resolution")]
     [JsonPropertyName("resolution")]
-    public string Resolution { get; set; }
+    public string? Resolution { get; set; }
 
     /// <summary>
     /// A video stream tags.
     /// </summary>
     [DataMember(Name = "tags")]
     [JsonPropertyName("tags")]
-    public VideoTags Tags { get; set; }
+    public VideoTags? Tags { get; set; }
 }

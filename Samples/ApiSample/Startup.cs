@@ -1,20 +1,22 @@
-#region Copyright (C) 2017-2022 Yaroslav Tatarenko
+using System.Text.Json.Nodes;
+#region Copyright (C) 2017-2026 Yaroslav Tatarenko
 
-// Copyright (C) 2017-2022 Yaroslav Tatarenko
-// This product uses MediaInfo library, Copyright (c) 2002-2021 MediaArea.net SARL. 
+// Copyright (C) 2017-2026 Yaroslav Tatarenko
+// This product uses MediaInfo library, Copyright (c) 2002-2026 MediaArea.net SARL.
 // https://mediaarea.net
 
 #endregion
 
+using System;
+using System.Text.Json.Serialization;
 using ApiSample.Infrastructure;
+using Mapster;
+using MapsterMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Models;
-using System;
-using System.Text.Json.Serialization;
+using Microsoft.OpenApi;
 
 namespace ApiSample;
 
@@ -35,13 +37,20 @@ public static class Startup
             .AddControllers()
                 .AddJsonOptions(options => options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull);
 
+        var config = TypeAdapterConfig.GlobalSettings;
+        config.Scan(typeof(Startup).Assembly);
+        config.Compile();
+
+        services
+            .AddSingleton(config)
+            .AddScoped<IMapper, ServiceMapper>();
+
         services
             .AddFilters()
-            .AddAutoMapper(MapperExtensions.ConfigureMapper)
             .AddSwaggerGen(options =>
             {
-                options.MapType<TimeSpan>(() => new OpenApiSchema { Type = "string", Format = "duration", Default = new OpenApiString("00:01:00"), Example = new OpenApiString("00:01:00") });
-                options.MapType<TimeSpan?>(() => new OpenApiSchema { Type = "string", Format = "duration", Default = new OpenApiString("00:01:00"), Example = new OpenApiString("00:01:00") });
+                options.MapType<TimeSpan>(() => new OpenApiSchema { Type = JsonSchemaType.String, Format = "duration", Default = JsonValue.Create("00:01:00"), Example = JsonValue.Create("00:01:00") });
+                options.MapType<TimeSpan?>(() => new OpenApiSchema { Type = JsonSchemaType.String, Format = "duration", Default = JsonValue.Create("00:01:00"), Example = JsonValue.Create("00:01:00") });
                 options
                     .IncludeApplicationXmlComments("ApiSample.xml")
                     .EnableAnnotations();

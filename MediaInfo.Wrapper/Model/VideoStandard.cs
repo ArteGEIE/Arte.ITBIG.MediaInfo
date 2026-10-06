@@ -1,26 +1,26 @@
-﻿#region Copyright (C) 2017-2022 Yaroslav Tatarenko
+﻿#region Copyright (C) 2017-2026 Yaroslav Tatarenko
 
-// Copyright (C) 2017-2022 Yaroslav Tatarenko
-// This product uses MediaInfo library, Copyright (c) 2002-2021 MediaArea.net SARL. 
+// Copyright (C) 2017-2026 Yaroslav Tatarenko
+// This product uses MediaInfo library, Copyright (c) 2002-2026 MediaArea.net SARL. 
 // https://mediaarea.net
 
 #endregion
 
 namespace MediaInfo.Model
 {
+  /// <summary>
+  /// Defines the video broadcast standards recognized by the wrapper.
+  /// </summary>
+  public enum VideoStandard
+  {
     /// <summary>
-    /// Describes video standards
+    /// National Television System Committee standard.
     /// </summary>
-    public enum VideoStandard
-    {
-        /// <summary>
-        /// NTSC standard
-        /// </summary>
-        NTSC,
+    NTSC,
 
-        /// <summary>
-        /// PAL standard
-        /// </summary>
-        PAL
-    }
+    /// <summary>
+    /// Phase Alternating Line standard.
+    /// </summary>
+    PAL
+  }
 }

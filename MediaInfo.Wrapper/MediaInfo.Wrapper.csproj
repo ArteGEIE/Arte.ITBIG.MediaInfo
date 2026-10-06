@@ -17,6 +17,7 @@
     <RepositoryUrl>$(PackageRepository)</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageIcon>$(PackageIconValue)</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <Description>$(PackageDescription)</Description>
     <PackageReleaseNotes>$(PackageNotes)</PackageReleaseNotes>
     <Platforms>AnyCPU;x64;x86</Platforms>
@@ -35,11 +36,11 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net4.0'">
-    <PackageReference Include="microsoft.netframework.referenceassemblies.net40" Version="1.0.2" PrivateAssets="All" />
+    <PackageReference Include="microsoft.netframework.referenceassemblies.net40" Version="1.0.3" PrivateAssets="All" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net4.5'">
-    <PackageReference Include="microsoft.netframework.referenceassemblies.net45" Version="1.0.2" PrivateAssets="All" />
+    <PackageReference Include="microsoft.netframework.referenceassemblies.net45" Version="1.0.3" PrivateAssets="All" />
     <PackageReference Include="System.Memory" Version="4.5.4" />
   </ItemGroup>
 
@@ -52,6 +53,7 @@
   <ItemGroup>
     <None Include="images/$(PackageIconValue)" Pack="true" PackagePath="" />
     <None Include="..\LICENSE" Pack="true" PackagePath="" />
+    <None Include="..\README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
 </Project>

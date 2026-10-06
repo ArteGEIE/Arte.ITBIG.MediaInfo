@@ -1,7 +1,7 @@
-﻿#region Copyright (C) 2017-2022 Yaroslav Tatarenko
+﻿#region Copyright (C) 2017-2026 Yaroslav Tatarenko
 
-// Copyright (C) 2017-2022 Yaroslav Tatarenko
-// This product uses MediaInfo library, Copyright (c) 2002-2021 MediaArea.net SARL. 
+// Copyright (C) 2017-2026 Yaroslav Tatarenko
+// This product uses MediaInfo library, Copyright (c) 2002-2026 MediaArea.net SARL. 
 // https://mediaarea.net
 
 #endregion
@@ -25,7 +25,7 @@ public class SubtitleStream : LanguageMediaStream
     /// <example>utf8</example>
     [DataMember(Name = "format")]
     [JsonPropertyName("format")]
-    public string Format { get; set; }
+    public string? Format { get; set; }
 
     /// <summary>
     /// Gets the subtitle codec.
