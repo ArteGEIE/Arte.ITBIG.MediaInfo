@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "MediaInfo.TestFilesGenerator": {
+      "commandName": "Project",
+      "commandLineArgs": "-c 3100"
+    }
+  }
+}

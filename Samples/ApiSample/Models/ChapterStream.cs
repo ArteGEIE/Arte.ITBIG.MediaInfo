@@ -1,7 +1,7 @@
-﻿#region Copyright (C) 2017-2022 Yaroslav Tatarenko
+﻿#region Copyright (C) 2017-2026 Yaroslav Tatarenko
 
-// Copyright (C) 2017-2022 Yaroslav Tatarenko
-// This product uses MediaInfo library, Copyright (c) 2002-2021 MediaArea.net SARL. 
+// Copyright (C) 2017-2026 Yaroslav Tatarenko
+// This product uses MediaInfo library, Copyright (c) 2002-2026 MediaArea.net SARL. 
 // https://mediaarea.net
 
 #endregion
@@ -33,5 +33,5 @@ public class ChapterStream : MediaStream
     /// <example>Chapter description</example>
     [DataMember(Name = "description")]
     [JsonPropertyName("description")]
-    public string Description { get; }
+    public string? Description { get; }
 }

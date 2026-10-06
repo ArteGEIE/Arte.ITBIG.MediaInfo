@@ -1,4 +1,4 @@
-version: '21.9.{build}'
+version: '26.1.{build}'
 
 image: Visual Studio 2022
 configuration: Release
@@ -19,13 +19,18 @@ environment:
   - solution_name: MP-MediaInfo.Core.sln
     test_project: MediaInfo.Wrapper.Core.Tests.csproj
 
+install:
+- ps: |
+    Invoke-WebRequest -Uri 'https://dot.net/v1/dotnet-install.ps1' -UseBasicParsing -OutFile "$env:temp\dotnet-install.ps1"
+    & $env:temp\dotnet-install.ps1 -Architecture x64 -Version '10.0.103' -InstallDir "$env:ProgramFiles\dotnet"
+
 before_build:
 - cmd: >-
-    dotnet restore %solution_name%
+    dotnet restore %SolutionName%
 
 # to run your custom scripts instead of automatic MSBuild
 build_script:
-  - cmd: msbuild %solution_name% /verbosity:minimal /p:Configuration=Release /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+  - cmd: msbuild %SolutionName% /verbosity:minimal /p:Configuration=Release /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 
 test_script:
 - cmd: >-

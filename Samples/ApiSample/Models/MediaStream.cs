@@ -1,7 +1,7 @@
-﻿#region Copyright (C) 2017-2022 Yaroslav Tatarenko
+﻿#region Copyright (C) 2017-2026 Yaroslav Tatarenko
 
-// Copyright (C) 2017-2022 Yaroslav Tatarenko
-// This product uses MediaInfo library, Copyright (c) 2002-2021 MediaArea.net SARL. 
+// Copyright (C) 2017-2026 Yaroslav Tatarenko
+// This product uses MediaInfo library, Copyright (c) 2002-2026 MediaArea.net SARL. 
 // https://mediaarea.net
 
 #endregion
@@ -15,37 +15,42 @@ namespace ApiSample.Models;
 /// Defines constants for media stream kinds.
 /// </summary>
 [DataContract]
-[JsonConverter(typeof(JsonStringEnumMemberConverter))]
+[JsonConverter(typeof(JsonStringEnumConverter<MediaStreamKind>))]
 public enum MediaStreamKind
 {
     /// <summary>
     /// The video stream
     /// </summary>
     [EnumMember(Value = "video")]
+    [JsonStringEnumMemberName("video")]
     Video,
 
     /// <summary>
     /// The audio stream
     /// </summary>
     [EnumMember(Value = "audio")]
+    [JsonStringEnumMemberName("audio")]
     Audio,
 
     /// <summary>
     /// The subtitle stream
     /// </summary>
     [EnumMember(Value = "text")]
+    [JsonStringEnumMemberName("text")]
     Text,
 
     /// <summary>
     /// The image stream
     /// </summary>
     [EnumMember(Value = "image")]
+    [JsonStringEnumMemberName("image")]
     Image,
 
     /// <summary>
     /// Menu
     /// </summary>
     [EnumMember(Value = "menu")]
+    [JsonStringEnumMemberName("menu")]
     Menu
 }
 
@@ -68,7 +73,7 @@ public abstract class MediaStream
     /// </summary>
     [DataMember(Name = "name")]
     [JsonPropertyName("name")]
-    public string Name { get; set; }
+    public string? Name { get; set; }
 
     /// <summary>
     /// A kind of media stream.
