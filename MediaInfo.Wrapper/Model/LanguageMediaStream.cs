@@ -66,10 +66,26 @@ namespace MediaInfo.Model
     /// <summary>
     /// Code language.
     /// </summary>
-    public string LanguageId { get; internal set; }
-    public string LanguageString1 { get; internal set; }
-    public string LanguageString2 { get; internal set; }
-    public string LanguageString3 { get; internal set; }
-    public string LanguageString4 { get; internal set; }
+    public string LanguageId { get; internal set; } = string.Empty;
+
+    /// <summary>
+    /// Full language name from MediaInfo Language/String1 (e.g. English).
+    /// </summary>
+    public string LanguageString1 { get; internal set; } = string.Empty;
+
+    /// <summary>
+    /// Two-letter ISO 639-1 language code from MediaInfo Language/String2 (e.g. en), empty if none.
+    /// </summary>
+    public string LanguageString2 { get; internal set; } = string.Empty;
+
+    /// <summary>
+    /// Three-letter ISO 639-2 language code from MediaInfo Language/String3, upper-cased (e.g. ENG).
+    /// </summary>
+    public string LanguageString3 { get; internal set; } = string.Empty;
+
+    /// <summary>
+    /// ISO 639-1 language code with optional ISO 3166-1 country from MediaInfo Language/String4 (e.g. en-US).
+    /// </summary>
+    public string LanguageString4 { get; internal set; } = string.Empty;
   }
 }

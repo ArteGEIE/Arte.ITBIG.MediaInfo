@@ -252,7 +252,7 @@ public class VideoStream : LanguageMediaStream
   /// <value>
   /// Video codec id.
   /// </value>
-  public string CodecId { get; set; }
+  public string CodecId { get; set; } = string.Empty;
 
   /// <summary>
   /// Gets the video resolution.
